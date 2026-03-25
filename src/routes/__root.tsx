@@ -1,8 +1,8 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
+import VouchHeader from '../components/VouchHeader'
+import VouchFooter from '../components/VouchFooter'
 
 import appCss from '../styles.css?url'
 
@@ -19,7 +19,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'VouchCare — Get the Right Care Instantly',
       },
     ],
     links: [
@@ -32,6 +32,33 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+const AUTH_PATHS = [
+  '/login',
+  '/forgot-password',
+  '/verify',
+  '/verify-success',
+  '/portal-select',
+  '/signup',
+  '/link-hmo',
+  '/home',
+  '/find-care',
+  '/book-appointment',
+  '/support',
+  '/triage',
+]
+
+function AuthShell({ children }: { children: React.ReactNode }) {
+  const { location } = useRouterState()
+  const isAuth = AUTH_PATHS.includes(location.pathname)
+  return (
+    <>
+      {!isAuth && <VouchHeader />}
+      {children}
+      {!isAuth && <VouchFooter />}
+    </>
+  )
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -39,10 +66,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-        <Header />
-        {children}
-        <Footer />
+      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(27,40,128,0.18)]">
+        <AuthShell>{children}</AuthShell>
         <TanStackDevtools
           config={{
             position: 'bottom-right',
