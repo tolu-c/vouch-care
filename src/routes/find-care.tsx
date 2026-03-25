@@ -134,10 +134,11 @@ function FindCarePage() {
           <div className="space-y-3">
             <div className="rounded-2xl overflow-hidden shadow-sm" style={{ height: '220px' }}>
               <iframe
-                src="https://www.openstreetmap.org/export/embed.html?bbox=3.1%2C6.35%2C3.65%2C6.72&layer=mapnik&marker=6.5244%2C3.3792"
+                src="https://maps.google.com/maps?q=Lagos+State+University+Teaching+Hospital,+Lagos&hl=en&z=14&output=embed"
                 style={{ border: 0, width: '100%', height: '100%' }}
-                title="Map of Lagos, Nigeria"
+                title="Map showing LASUTH location in Lagos, Nigeria"
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
             {/* Current location card */}

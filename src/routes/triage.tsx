@@ -1,201 +1,231 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import {
-  AlertTriangle,
-  ArrowLeft,
-  CalendarCheck,
-  CheckCircle,
-  Hospital,
-  Loader2,
-  Stethoscope,
-} from 'lucide-react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowLeft, Bot, Mic, SendHorizontal, User } from 'lucide-react'
 import DashboardLayout from '#/components/dashboard/DashboardLayout'
 
 export const Route = createFileRoute('/triage')({ component: TriagePage })
 
-const SYMPTOMS =
-  'I have Severe headache, since morning, I feel nauseous, I feel like I am losing consciousness'
-
-interface Condition {
-  name: string
-  likelihood: 'High' | 'Moderate' | 'Low'
-}
-
-const CONDITIONS: Condition[] = [
-  { name: 'Migraine with Aura', likelihood: 'High' },
-  { name: 'Hypertensive Crisis', likelihood: 'Moderate' },
-  { name: 'Meningitis', likelihood: 'Moderate' },
-  { name: 'Subarachnoid Hemorrhage', likelihood: 'Low' },
-]
-
-const RECOMMENDATIONS = [
-  'Visit the nearest emergency room immediately',
-  'Do not drive or operate heavy machinery',
-  'Have someone stay with you at all times',
-  'Monitor blood pressure if possible',
-  'Avoid bright lights and loud sounds',
-]
-
-const LIKELIHOOD_COLORS: Record<Condition['likelihood'], string> = {
-  High: 'bg-red-100 text-red-600',
-  Moderate: 'bg-orange/10 text-orange',
-  Low: 'bg-slate-100 text-slate-500',
-}
+const USER_SYMPTOMS =
+  'I have Severe headache, since morning, i feel nauseous , I feel like I am loosing consciousness'
 
 function TriageSubHeader() {
+  const navigate = useNavigate()
   return (
-    <div className="flex items-center gap-3 px-5 h-14">
-      <Stethoscope size={24} className="text-white" />
+    <div className="flex items-center gap-3 px-4 h-14">
+      <button
+        type="button"
+        onClick={() => void navigate({ to: '/home' })}
+        aria-label="Go back to home"
+        className="text-white/80 hover:text-white transition-colors"
+      >
+        <ArrowLeft size={22} />
+      </button>
       <h2 className="font-display font-bold text-white text-lg tracking-wide">
-        AI Symptom Analysis
+        AI Symptoms Triage
       </h2>
     </div>
   )
 }
 
+function AiAvatar() {
+  return (
+    <div className="flex flex-col items-center gap-1 shrink-0">
+      <div className="w-10 h-10 rounded-full bg-navy flex items-center justify-center ring-2 ring-white/20">
+        <Bot size={20} className="text-white" />
+      </div>
+      <span className="text-navy/70 text-[10px] font-bold tracking-wide">AI</span>
+    </div>
+  )
+}
+
+function UserAvatar() {
+  return (
+    <div className="flex flex-col items-center gap-1 shrink-0">
+      <div className="w-10 h-10 rounded-full bg-navy/25 border-2 border-navy/30 flex items-center justify-center">
+        <User size={20} className="text-navy" />
+      </div>
+      <span className="text-navy/70 text-[10px] font-bold tracking-wide">You</span>
+    </div>
+  )
+}
+
+function TypingIndicator() {
+  return (
+    <div className="flex items-start gap-3">
+      <AiAvatar />
+      <div
+        className="rounded-2xl rounded-tl-sm px-5 py-3.5 flex items-center gap-1.5"
+        style={{ background: 'rgba(100, 110, 185, 0.58)' }}
+      >
+        <span className="w-2 h-2 rounded-full bg-white/80 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <span className="w-2 h-2 rounded-full bg-white/80 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <span className="w-2 h-2 rounded-full bg-white/80 animate-bounce" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  )
+}
+
 function TriagePage() {
-  const [analyzing, setAnalyzing] = useState(true)
+  const navigate = useNavigate()
+  const [step, setStep] = useState(0)
+  const [inputText, setInputText] = useState('')
+  const [typing, setTyping] = useState(false)
+  const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const t = setTimeout(() => setAnalyzing(false), 2200)
-    return () => clearTimeout(t)
+    const t1 = setTimeout(() => setStep(1), 400)
+    const t2 = setTimeout(() => setStep(2), 1500)
+    const t3 = setTimeout(() => { setTyping(true) }, 2500)
+    const t4 = setTimeout(() => { setTyping(false); setStep(3) }, 3800)
+    const t5 = setTimeout(() => setStep(4), 4600)
+    const t6 = setTimeout(() => setStep(5), 5200)
+    return () => [t1, t2, t3, t4, t5, t6].forEach(clearTimeout)
   }, [])
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [step, typing])
 
   return (
     <DashboardLayout activeTab="home" mobileSubHeader={<TriageSubHeader />}>
-      <div className="px-4 sm:px-6 lg:px-8 py-5 max-w-2xl lg:max-w-3xl mx-auto w-full pb-6">
-        {/* Desktop title */}
-        <div className="hidden lg:flex items-center gap-3 mb-6">
-          <Stethoscope size={28} className="text-navy" />
-          <h2 className="font-display font-bold text-navy text-2xl">AI Symptom Analysis</h2>
+      <div className="flex flex-col" style={{ height: '100%' }}>
+        {/* VOUCHCARE AI ASSISTANT green banner */}
+        <div className="shrink-0 py-2.5 text-center" style={{ background: '#1a5c25' }}>
+          <p className="text-white font-display font-bold text-xs tracking-[0.22em] uppercase">
+            VOUCHCARE AI ASSISTANT
+          </p>
         </div>
 
-        {/* Back link */}
-        <Link
-          to="/home"
-          className="inline-flex items-center gap-1.5 text-navy/60 hover:text-navy text-sm font-medium mb-5 transition-colors"
-        >
-          <ArrowLeft size={16} />
-          Back to Home
-        </Link>
+        {/* Scrollable chat area */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-5 max-w-2xl mx-auto w-full">
 
-        {/* User symptom bubble */}
-        <div className="flex justify-end mb-6">
-          <div
-            className="max-w-[85%] rounded-2xl rounded-tr-sm px-5 py-4 shadow-sm"
-            style={{ background: 'rgba(27,40,128,0.12)', border: '1px solid rgba(27,40,128,0.15)' }}
-          >
-            <p className="text-navy text-sm leading-relaxed">{SYMPTOMS}</p>
-            <p className="text-navy/50 text-[10px] mt-1.5 text-right">You</p>
-          </div>
-        </div>
-
-        {/* Analysis result */}
-        {analyzing ? (
-          <div
-            className="rounded-2xl p-8 flex flex-col items-center gap-4 shadow-sm"
-            style={{ background: 'rgba(255,255,255,0.55)' }}
-          >
-            <Loader2 size={36} className="text-navy animate-spin" />
-            <p className="font-display font-semibold text-navy text-base">
-              Analyzing your symptoms…
-            </p>
-            <p className="text-slate-500 text-sm text-center">
-              Our AI is reviewing your inputs against medical databases
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {/* AI response label */}
-            <div className="flex items-center gap-2 mb-1">
-              <div className="w-7 h-7 rounded-full bg-navy flex items-center justify-center">
-                <Stethoscope size={14} className="text-white" />
+          {/* AI: greeting */}
+          {step >= 1 && (
+            <div className="flex items-end gap-3 vc-fade-in">
+              <AiAvatar />
+              <div
+                className="rounded-2xl rounded-bl-sm px-4 py-3 max-w-[76%] shadow-sm"
+                style={{ background: 'rgba(100, 110, 185, 0.60)' }}
+              >
+                <p className="text-white text-sm leading-relaxed">How are you feeling today ?</p>
               </div>
-              <span className="text-navy/60 text-xs font-semibold">VouchCare AI</span>
             </div>
+          )}
 
-            {/* Severity badge */}
-            <div
-              className="rounded-2xl p-5 shadow-sm"
-              style={{ background: 'rgba(255,255,255,0.65)' }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                  <AlertTriangle size={20} className="text-red-600" />
+          {/* User message */}
+          {step >= 2 && (
+            <div className="flex items-end gap-3 flex-row-reverse vc-fade-in">
+              <UserAvatar />
+              <div
+                className="rounded-2xl rounded-br-sm px-4 py-3 max-w-[76%] shadow-sm"
+                style={{ background: 'rgba(165, 165, 180, 0.65)' }}
+              >
+                <p className="text-slate-800 text-sm leading-relaxed">{USER_SYMPTOMS}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Typing indicator */}
+          {typing && (
+            <div className="vc-fade-in">
+              <TypingIndicator />
+            </div>
+          )}
+
+          {/* AI: report intro */}
+          {step >= 3 && (
+            <div className="flex items-end gap-3 vc-fade-in">
+              <AiAvatar />
+              <div
+                className="rounded-2xl rounded-bl-sm px-4 py-3 max-w-[76%] shadow-sm"
+                style={{ background: 'rgba(100, 110, 185, 0.60)' }}
+              >
+                <p className="text-white text-sm leading-relaxed">
+                  Based on your symptoms, this is your report:
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Diagnosis card */}
+          {step >= 4 && (
+            <div className="pl-14 vc-fade-in">
+              <div
+                className="rounded-2xl px-5 py-4 shadow-md space-y-3.5"
+                style={{ background: 'rgba(255,255,255,0.92)', border: '1px solid rgba(255,255,255,0.9)' }}
+              >
+                <div>
+                  <span className="text-navy font-bold text-sm">Diagnosis: </span>
+                  <span className="text-slate-800 text-sm font-medium">Stroke</span>
                 </div>
                 <div>
-                  <p className="font-display font-bold text-red-600 text-lg">URGENT</p>
-                  <p className="text-slate-500 text-xs">Seek immediate medical attention</p>
+                  <span className="text-navy font-bold text-sm">Tier: </span>
+                  <span className="text-orange font-bold text-sm">Emergency Care</span>
+                </div>
+                <div>
+                  <span className="text-navy font-bold text-sm">Nearest Facility: </span>
+                  <span className="text-slate-800 text-sm font-medium">LASUTH</span>
+                </div>
+                <div>
+                  <span className="text-navy font-bold text-sm">Recommendation: </span>
+                  <span className="text-slate-700 text-sm leading-relaxed">
+                    Seek emergency service within the next 24 hours.
+                  </span>
                 </div>
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed">
-                Based on your symptoms — severe headache, nausea, and near-loss of consciousness —
-                this could indicate a serious neurological or cardiovascular event. Please seek
-                emergency care immediately.
-              </p>
             </div>
+          )}
 
-            {/* Possible conditions */}
-            <div
-              className="rounded-2xl p-5 shadow-sm"
-              style={{ background: 'rgba(255,255,255,0.65)' }}
-            >
-              <h3 className="font-display font-bold text-navy text-base mb-3">
-                Possible Conditions
-              </h3>
-              <div className="space-y-2">
-                {CONDITIONS.map((c) => (
-                  <div key={c.name} className="flex items-center justify-between gap-3">
-                    <span className="text-slate-700 text-sm">{c.name}</span>
-                    <span
-                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap ${
-                        LIKELIHOOD_COLORS[c.likelihood]
-                      }`}
-                    >
-                      {c.likelihood}
-                    </span>
-                  </div>
-                ))}
+          {/* Proceed button */}
+          {step >= 5 && (
+            <div className="vc-fade-in pt-2">
+              <button
+                type="button"
+                onClick={() => void navigate({ to: '/find-care' })}
+                className="w-full bg-navy text-white font-display font-bold text-lg py-4 rounded-2xl hover:bg-navy-dark active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              >
+                Proceed
+              </button>
+            </div>
+          )}
+
+          <div ref={bottomRef} />
+        </div>
+
+        {/* Input bar — appears with Proceed */}
+        {step >= 5 && (
+          <div
+            className="shrink-0 px-4 sm:px-6 py-3 border-t vc-fade-in"
+            style={{ borderColor: 'rgba(255,255,255,0.25)', background: 'rgba(255,255,255,0.12)' }}
+          >
+            <div className="max-w-2xl mx-auto flex items-center gap-3">
+              <div
+                className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm"
+                style={{ border: '2px solid #e2e8f0' }}
+              >
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  className="flex-1 text-sm text-slate-700 placeholder:text-slate-400 outline-none bg-transparent"
+                  aria-label="Type your message"
+                />
+                <button
+                  type="button"
+                  className="w-9 h-9 rounded-full bg-navy flex items-center justify-center shrink-0 hover:bg-navy-dark transition-colors"
+                  aria-label="Send message"
+                >
+                  <SendHorizontal size={16} className="text-white" />
+                </button>
               </div>
-              <p className="text-slate-400 text-[11px] mt-4">
-                ⚠ This is not a diagnosis. Consult a licensed physician.
-              </p>
-            </div>
-
-            {/* Recommendations */}
-            <div
-              className="rounded-2xl p-5 shadow-sm"
-              style={{ background: 'rgba(255,255,255,0.65)' }}
-            >
-              <h3 className="font-display font-bold text-navy text-base mb-3">
-                Recommendations
-              </h3>
-              <ul className="space-y-2">
-                {RECOMMENDATIONS.map((r) => (
-                  <li key={r} className="flex items-start gap-2.5 text-sm text-slate-600">
-                    <CheckCircle size={16} className="text-green shrink-0 mt-0.5" />
-                    {r}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Action buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <Link
-                to="/find-care"
-                className="flex items-center justify-center gap-2 bg-red-600 text-white font-display font-bold text-sm py-3.5 rounded-xl hover:bg-red-700 transition-colors shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              <button
+                type="button"
+                className="w-11 h-11 flex items-center justify-center text-slate-500 hover:text-navy transition-colors shrink-0"
+                aria-label="Voice input"
               >
-                <Hospital size={18} />
-                Find Emergency Care
-              </Link>
-              <Link
-                to="/book-appointment"
-                className="flex items-center justify-center gap-2 bg-navy text-white font-display font-bold text-sm py-3.5 rounded-xl hover:bg-navy-dark transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-              >
-                <CalendarCheck size={18} />
-                Book Appointment
-              </Link>
+                <Mic size={24} />
+              </button>
             </div>
           </div>
         )}

@@ -27,8 +27,18 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: appCss,
       },
+      {
+        rel: 'icon',
+        href: '/favicon.svg',
+        type: 'image/svg+xml',
+      },
+      {
+        rel: 'icon',
+        href: '/favicon.ico',
+      },
     ],
   }),
+  notFoundComponent: () => <p>Page not found.</p>,
   shellComponent: RootDocument,
 })
 

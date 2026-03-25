@@ -47,7 +47,16 @@
   }
 }
 
+@keyframes vcFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @layer components {
+  .vc-fade-in {
+    animation: vcFadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
   .reveal {
     opacity: 0;
     transform: translateY(28px);

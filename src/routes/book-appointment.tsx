@@ -54,19 +54,19 @@ function BookAppointmentPage() {
           <h2 className="font-display font-bold text-navy text-2xl">Book Service</h2>
         </div>
 
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex flex-col lg:flex-row gap-0">
           {/* Hero image + banner */}
-          <div className="lg:w-[48%] shrink-0">
-            <div className="overflow-hidden lg:rounded-none" style={{ maxHeight: '280px' }}>
+          <div className="lg:w-1/2 shrink-0 flex flex-col">
+            <div className="overflow-hidden" style={{ height: '320px' }}>
               <img
                 src={DOCTOR_IMAGE}
                 alt="Doctor in white coat consulting patient at table with medical documents — cottonbro studio on Pexels"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center top', height: '280px' }}
+                style={{ objectPosition: 'center center' }}
                 loading="lazy"
               />
             </div>
-            <div className="bg-navy px-6 py-5">
+            <div className="bg-navy px-6 py-6 lg:py-8">
               <p className="text-white font-display font-bold text-base sm:text-lg leading-snug text-center lg:text-left">
                 VouchCare offers direct service and appointment bookings, with instant cost
                 disclosure and payment
@@ -75,10 +75,10 @@ function BookAppointmentPage() {
           </div>
 
           {/* Form */}
-          <div className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
+          <div className="lg:w-1/2 flex items-center px-4 sm:px-6 lg:px-8 py-6 lg:py-0">
             {booked ? (
               <div
-                className="rounded-2xl p-8 text-center shadow-sm"
+                className="rounded-2xl p-8 text-center shadow-sm w-full"
                 style={{ background: 'rgba(255,255,255,0.60)' }}
               >
                 <div className="w-16 h-16 rounded-full bg-green/15 flex items-center justify-center mx-auto mb-4">
@@ -107,7 +107,7 @@ function BookAppointmentPage() {
               </div>
             ) : (
               <div
-                className="rounded-2xl p-5 sm:p-6 shadow-sm"
+                className="rounded-2xl p-5 sm:p-6 shadow-sm w-full"
                 style={{ background: 'rgba(210,210,218,0.55)' }}
               >
                 <form onSubmit={handleCheckIn} className="space-y-4">
@@ -168,3 +168,4 @@ function BookAppointmentPage() {
     </DashboardLayout>
   )
 }
+
