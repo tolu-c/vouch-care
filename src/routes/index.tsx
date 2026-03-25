@@ -1,6 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { getSession, login, logout, refreshSession, sendOtp, signup, verifyOtp } from "@/server/auth";
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute("/")({ component: App });
 
 function App() {
   return (
@@ -37,20 +39,20 @@ function App() {
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           [
-            'Type-Safe Routing',
-            'Routes and links stay in sync across every page.',
+            "Type-Safe Routing",
+            "Routes and links stay in sync across every page.",
           ],
           [
-            'Server Functions',
-            'Call server code from your UI without creating API boilerplate.',
+            "Server Functions",
+            "Call server code from your UI without creating API boilerplate.",
           ],
           [
-            'Streaming by Default',
-            'Ship progressively rendered responses for faster experiences.',
+            "Streaming by Default",
+            "Ship progressively rendered responses for faster experiences.",
           ],
           [
-            'Tailwind Native',
-            'Design quickly with utility-first styling and reusable tokens.',
+            "Tailwind Native",
+            "Design quickly with utility-first styling and reusable tokens.",
           ],
         ].map(([title, desc], index) => (
           <article
@@ -61,7 +63,7 @@ function App() {
             <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
               {title}
             </h2>
-            <p className="m-0 text-sm text-[var(--sea-ink-soft)]">{desc}</p>
+            <p className="m-0 text-sm text-sea-ink-soft">{desc}</p>
           </article>
         ))}
       </section>
@@ -73,15 +75,113 @@ function App() {
             Edit <code>src/routes/index.tsx</code> to customize the home page.
           </li>
           <li>
-            Update <code>src/components/Header.tsx</code> and{' '}
+            Update <code>src/components/Header.tsx</code> and{" "}
             <code>src/components/Footer.tsx</code> for brand links.
           </li>
           <li>
-            Add routes in <code>src/routes</code> and tweak visual tokens in{' '}
+            Add routes in <code>src/routes</code> and tweak visual tokens in{" "}
             <code>src/styles.css</code>.
           </li>
         </ul>
       </section>
+
+      <AuthDemo />
     </main>
-  )
+  );
+}
+
+// ─── Temporary auth server-function demo (dev only) ──────────────────────────
+
+function AuthDemo() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [result, setResult] = useState<unknown>(null);
+
+  async function run(fn: () => Promise<unknown>) {
+    try {
+      setResult(await fn());
+    } catch (e) {
+      setResult({ error: String(e) });
+    }
+  }
+
+  return (
+    <section className="island-shell mt-8 rounded-2xl p-6 font-mono text-sm">
+      <p className="island-kicker mb-4">Auth server-fn demo (dev only)</p>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <input
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="rounded border border-[rgba(23,58,64,0.2)] px-3 py-1.5 text-sm"
+        />
+        <input
+          placeholder="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="rounded border border-[rgba(23,58,64,0.2)] px-3 py-1.5 text-sm"
+        />
+        <input
+          placeholder="otp"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          className="rounded border border-[rgba(23,58,64,0.2)] px-3 py-1.5 text-sm w-24"
+        />
+      </div>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          onClick={() => run(() => signup({ data: { email, password, confirmPassword: password } }))}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          signup
+        </button>
+        <button
+          onClick={() => run(() => login({ data: { email, password } }))}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          login
+        </button>
+        <button
+          onClick={() => run(() => sendOtp({ data: { email } }))}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          sendOtp
+        </button>
+        <button
+          onClick={() => run(() => verifyOtp({ data: { email, otp } }))}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          verifyOtp
+        </button>
+        <button
+          onClick={() => run(() => getSession())}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          getSession
+        </button>
+        <button
+          onClick={() => run(() => refreshSession())}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          refreshSession
+        </button>
+        <button
+          onClick={() => run(() => logout())}
+          className="rounded bg-red-500 px-3 py-1 text-white"
+        >
+          logout
+        </button>
+      </div>
+
+      {result !== null && (
+        <pre className="mt-4 overflow-x-auto rounded bg-black/5 p-3 text-xs">
+          {JSON.stringify(result, null, 2)}
+        </pre>
+      )}
+    </section>
+  );
 }

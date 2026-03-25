@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  RECEPTIONIST
+  ACCOUNTANT
+  MEDICAL_DIRECTOR
+  CLAIMS_OFFICER
+  NETWORK_MANAGER
+  HMO_ADMIN
+}
+
+enum Tier {
+  PRIMARY
+  SECONDARY
+  TERTIARY
+}
+
+enum SessionStatus {
+  PENDING
+  TOKEN_ISSUED
+  CHECKED_IN
+  COMPLETED
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PaymentType {
+  ESCROW_HOLD
+  HMO_SETTLEMENT
+  COPAY
+  ESCROW_RELEASE
+}
+
+enum PaymentStatus {
+  INITIATED
+  PENDING
+  SUCCESSFUL
+  FAILED
+  REVERSED
+}
+
+enum LedgerEntryType {
+  HOLD
+  RELEASE
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  passwordHash  String?
+  role          Role            @default(PATIENT)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  refreshTokens RefreshToken[]
+  enrollee      Enrollee?
+  facilityStaff FacilityStaff?
+}
+
+// OtpSession is an audit log — it records every time an OTP was dispatched for
+// an email address. Rows are cleaned up on successful OTP verification.
+model OtpSession {
+  id        String   @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  revoked   Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model HMO {
+  id             String         @id @default(cuid())
+  name           String
+  escrowWalletId String
+  createdAt      DateTime       @default(now())
+  plans          HMOPlan[]
+  enrollees      Enrollee[]
+  escrowLedgers  EscrowLedger[]
+}
+
+model HMOPlan {
+  id                 String     @id @default(cuid())
+  hmoId              String
+  hmo                HMO        @relation(fields: [hmoId], references: [id])
+  name               String
+  coveredTiers       Tier[]
+  coveredIcd10Ranges String[]
+  copayPercentage    Float
+  annualLimit        Int
+  createdAt          DateTime   @default(now())
+  enrollees          Enrollee[]
+}
+
+model Enrollee {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  user           User            @relation(fields: [userId], references: [id])
+  hmoId          String
+  hmo            HMO             @relation(fields: [hmoId], references: [id])
+  planId         String
+  plan           HMOPlan         @relation(fields: [planId], references: [id])
+  enrolleeNumber String          @unique
+  createdAt      DateTime        @default(now())
+  triageSessions TriageSession[]
+}
+
+model Facility {
+  id        String          @id @default(cuid())
+  name      String
+  tier      Tier
+  address   String
+  city      String
+  state     String
+  latitude  Float
+  longitude Float
+  phone     String?
+  createdAt DateTime        @default(now())
+  staff     FacilityStaff[]
+  claims    Claim[]
+}
+
+model FacilityStaff {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+  facilityId String
+  facility   Facility @relation(fields: [facilityId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model TriageSession {
+  id              String         @id @default(cuid())
+  enrolleeId      String
+  enrollee        Enrollee       @relation(fields: [enrolleeId], references: [id])
+  symptoms        String[]
+  icd10Code       String?
+  recommendedTier Tier?
+  status          SessionStatus  @default(PENDING)
+  llmProvider     String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  referralToken   ReferralToken?
+}
+
+model ReferralToken {
+  id               String        @id @default(cuid())
+  triageSessionId  String        @unique
+  triageSession    TriageSession @relation(fields: [triageSessionId], references: [id])
+  tokenHash        String        @unique
+  encryptedPayload String
+  hmoAuthStatus    String        @default("pending_auth")
+  isUsed           Boolean       @default(false)
+  scannedAt        DateTime?
+  expiresAt        DateTime
+  createdAt        DateTime      @default(now())
+  claim            Claim?
+}
+
+model Claim {
+  id              String        @id @default(cuid())
+  referralTokenId String        @unique
+  referralToken   ReferralToken @relation(fields: [referralTokenId], references: [id])
+  facilityId      String
+  facility        Facility      @relation(fields: [facilityId], references: [id])
+  status          ClaimStatus   @default(PENDING)
+  escrowReference String?
+  paycode         String?
+  rejectionReason String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  payments        Payment[]
+}
+
+model Payment {
+  id                   String        @id @default(cuid())
+  claimId              String
+  claim                Claim         @relation(fields: [claimId], references: [id])
+  type                 PaymentType
+  status               PaymentStatus @default(INITIATED)
+  amount               Int
+  interswitchReference String?       @unique
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+model EscrowLedger {
+  id        String          @id @default(cuid())
+  hmoId     String
+  hmo       HMO             @relation(fields: [hmoId], references: [id])
+  type      LedgerEntryType
+  amount    Int
+  reference String
+  createdAt DateTime        @default(now())
+}
