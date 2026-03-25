@@ -59,6 +59,7 @@ enum LedgerEntryType {
 model User {
   id            String          @id @default(cuid())
   email         String          @unique
+  passwordHash  String?
   role          Role            @default(PATIENT)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -67,10 +68,14 @@ model User {
   facilityStaff FacilityStaff?
 }
 
+// OtpSession is an audit log — it records every time an OTP was dispatched for
+// an email address. Rows are cleaned up on successful OTP verification.
 model OtpSession {
   id        String   @id @default(cuid())
   email     String
   createdAt DateTime @default(now())
+
+  @@index([email])
 }
 
 model RefreshToken {
