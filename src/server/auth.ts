@@ -5,10 +5,10 @@ import {
   setCookie,
 } from "@tanstack/react-start/server";
 import bcrypt from "bcryptjs";
-import { decodeJwt, errors as joseErrors, jwtVerify, SignJWT } from "jose";
+import { errors as joseErrors, jwtVerify, SignJWT } from "jose";
 import { db } from "@/server/lib/db";
 import { sendEmail } from "@/server/lib/email";
-import { redis } from "@/server/lib/redis";
+import { getRedis } from "@/server/lib/redis";
 import { loginSchema, sendOtpSchema, signupSchema, verifyOtpSchema } from "@/server/schemas/auth";
 import type { ApiResponse } from "@/server/types/auth";
 
@@ -67,12 +67,13 @@ async function issueSession(user: { id: string; email: string; role: string }) {
 }
 
 async function dispatchOtp(email: string): Promise<void> {
+  const redis = getRedis();
   const ttl = await redis.ttl(`otp:${email}`);
   if (ttl > 540) {
     throw new Error("Please wait before requesting a new code");
   }
 
-  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const code = String(crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000).padStart(6, "0");
   const hash = await bcrypt.hash(code, 10);
 
   await redis.set(`otp:${email}`, JSON.stringify({ hash, attempts: 0 }), { ex: 600 });
@@ -161,6 +162,7 @@ export const verifyOtp = createServerFn({ method: "POST" })
     }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
       try {
         const { email, otp } = data;
+        const redis = getRedis();
 
         const raw = await redis.get<string>(`otp:${email}`);
         if (!raw) {
@@ -277,33 +279,23 @@ export const refreshSession = createServerFn({ method: "POST" }).handler(
     try {
       const rawToken = getCookie("refresh_token");
       if (!rawToken) {
+        deleteCookie("session");
         return { success: false, error: "No refresh token found", data: null };
       }
 
-      const sessionToken = getCookie("session");
-      if (!sessionToken) {
-        return { success: false, error: "No session found", data: null };
-      }
-
-      let userId: string;
-      try {
-        const payload = decodeJwt(sessionToken);
-        userId = payload.sub as string;
-      } catch {
-        return { success: false, error: "Invalid session", data: null };
-      }
-
-      const rows = await db.refreshToken.findMany({
+      // Search all non-revoked, non-expired refresh tokens and find the one
+      // matching the raw token via bcrypt comparison. This avoids depending on
+      // the short-lived session cookie, which may have already expired.
+      const candidates = await db.refreshToken.findMany({
         where: {
-          userId,
           revoked: false,
           expiresAt: { gt: new Date() },
         },
         include: { user: true },
       });
 
-      let matchedRow: (typeof rows)[number] | undefined;
-      for (const row of rows) {
+      let matchedRow: (typeof candidates)[number] | undefined;
+      for (const row of candidates) {
         const matches = await bcrypt.compare(rawToken, row.token);
         if (matches) {
           matchedRow = row;
@@ -312,6 +304,8 @@ export const refreshSession = createServerFn({ method: "POST" }).handler(
       }
 
       if (!matchedRow) {
+        deleteCookie("session");
+        deleteCookie("refresh_token");
         return {
           success: false,
           error: "Refresh token not found, revoked, or expired",
