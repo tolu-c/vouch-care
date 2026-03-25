@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { getSession, login, logout, refreshSession, sendOtp, signup, verifyOtp } from "@/server/auth";
+import { generateReferralToken, triageSymptoms } from "@/server/triage";
 
 export const Route = createFileRoute("/")({ component: App });
 
@@ -97,6 +98,7 @@ function AuthDemo() {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState<unknown>(null);
+  const [lastSessionId, setLastSessionId] = useState("");
 
   async function run(fn: () => Promise<unknown>) {
     try {
@@ -174,6 +176,28 @@ function AuthDemo() {
           className="rounded bg-red-500 px-3 py-1 text-white"
         >
           logout
+        </button>
+        <button
+          onClick={() =>
+            run(async () => {
+              const res = await triageSymptoms({
+                data: { symptoms: ["headache", "fever"], latitude: 6.5244, longitude: 3.3792 },
+              });
+              if (res.success && res.data) {
+                setLastSessionId(res.data.sessionId);
+              }
+              return res;
+            })
+          }
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          triageSymptoms
+        </button>
+        <button
+          onClick={() => run(() => generateReferralToken({ data: { sessionId: lastSessionId } }))}
+          className="rounded bg-[var(--lagoon-deep)] px-3 py-1 text-white"
+        >
+          generateReferralToken
         </button>
       </div>
 
