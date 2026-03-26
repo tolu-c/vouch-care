@@ -16,6 +16,16 @@ function getJwtKey() {
   return new TextEncoder().encode(secret);
 }
 
+// SHA-256 hex digest of the raw token — safe to store and index because it
+// cannot be reversed to the original value, enabling O(1) lookup by selector.
+async function hashTokenSelector(rawToken: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(rawToken);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 async function issueSession(user: { id: string; email: string; role: string }) {
   const key = getJwtKey();
   const jwt = await new SignJWT({
@@ -34,10 +44,14 @@ async function issueSession(user: { id: string; email: string; role: string }) {
   });
 
   const rawToken = crypto.randomUUID();
-  const tokenHash = await bcrypt.hash(rawToken, 10);
+  const [tokenHash, tokenSelector] = await Promise.all([
+    bcrypt.hash(rawToken, 10),
+    hashTokenSelector(rawToken),
+  ]);
   await db.refreshToken.create({
     data: {
       userId: user.id,
+      tokenSelector,
       token: tokenHash,
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
@@ -226,30 +240,19 @@ export const logout = createServerFn({ method: "POST" }).handler(
       const rawToken = getCookie("refresh_token");
 
       if (rawToken) {
-        const sessionToken = getCookie("session");
-        if (sessionToken) {
-          try {
-            const { payload } = await jwtVerify(sessionToken, getJwtKey());
-            const userId = payload.sub as string;
-            const rows = await db.refreshToken.findMany({
-              where: { userId, revoked: false },
+        try {
+          const tokenSelector = await hashTokenSelector(rawToken);
+          const row = await db.refreshToken.findFirst({
+            where: { tokenSelector, revoked: false },
+          });
+          if (row && (await bcrypt.compare(rawToken, row.token))) {
+            await db.refreshToken.update({
+              where: { id: row.id },
+              data: { revoked: true },
             });
-            const results = await Promise.all(
-              rows.map(async (row) => ({
-                row,
-                ok: await bcrypt.compare(rawToken, row.token),
-              })),
-            );
-            const matched = results.find((r) => r.ok)?.row;
-            if (matched) {
-              await db.refreshToken.update({
-                where: { id: matched.id },
-                data: { revoked: true },
-              });
-            }
-          } catch {
-            // session already expired — nothing to revoke
           }
+        } catch {
+          // token lookup failed — nothing to revoke
         }
       }
 
@@ -273,24 +276,20 @@ export const refreshSession = createServerFn({ method: "POST" }).handler(
         return { success: false, error: "No refresh token found", data: null };
       }
 
-      // Search all non-revoked, non-expired refresh tokens and find the one
-      // matching the raw token via bcrypt comparison. This avoids depending on
-      // the short-lived session cookie, which may have already expired.
-      const candidates = await db.refreshToken.findMany({
+      // Look up by SHA-256 selector for O(1) DB lookup, then verify the
+      // bcrypt hash to confirm authenticity.
+      const tokenSelector = await hashTokenSelector(rawToken);
+      const candidate = await db.refreshToken.findFirst({
         where: {
+          tokenSelector,
           revoked: false,
           expiresAt: { gt: new Date() },
         },
         include: { user: true },
       });
 
-      const results = await Promise.all(
-        candidates.map(async (row) => ({
-          row,
-          ok: await bcrypt.compare(rawToken, row.token),
-        })),
-      );
-      const matchedRow = results.find((r) => r.ok)?.row;
+      const matchedRow =
+        candidate && (await bcrypt.compare(rawToken, candidate.token)) ? candidate : null;
 
       if (!matchedRow) {
         deleteCookie("session");

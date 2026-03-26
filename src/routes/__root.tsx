@@ -53,7 +53,7 @@ function RootDocument() {
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(27,40,128,0.18)]">
+      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(27,40,128,0.18)]">
         <Outlet />
         <TanStackDevtools
           config={{
