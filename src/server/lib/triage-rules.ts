@@ -51,6 +51,14 @@ const rules: RuleEntry[] = [
     confidence: 0.9,
   },
   {
+    keywords: ['severe bleeding', 'hemorrhage', 'haemorrhage'],
+    icd10Code: 'R58',
+    icd10Description: 'Haemorrhage, not elsewhere classified',
+    recommendedTier: 'TERTIARY',
+    urgency: 'emergency',
+    confidence: 0.9,
+  },
+  {
     keywords: ['fracture', 'broken bone', 'injury'],
     icd10Code: 'S09.9',
     icd10Description: 'Unspecified injury of head',

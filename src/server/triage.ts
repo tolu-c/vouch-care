@@ -39,9 +39,14 @@ type HmoPolicyCache = {
 }
 
 function isIcd10InRanges(icd10Code: string, ranges: string[]): boolean {
-  const code = icd10Code.replace('.', '').toUpperCase()
-  const codeLetter = code.charCodeAt(0)
-  const codeNum = parseInt(code.slice(1), 10)
+  // Use only the ICD-10 category (letter + first two digits) for range checks.
+  // This ensures codes like "J10.11" are correctly compared against ranges like "J00-J99"
+  // by extracting letter=J, num=10 instead of erroneously parsing 1011.
+  const normalized = icd10Code.toUpperCase()
+  const codeLetter = normalized.charCodeAt(0)
+  const codeNum = parseInt(normalized.slice(1, 3), 10)
+
+  if (isNaN(codeNum)) return false
 
   for (const range of ranges) {
     // Ranges look like "A00-B99"
@@ -219,6 +224,15 @@ export const triageSymptoms = createServerFn({ method: 'POST' })
         if (isEmergency) {
           llmResult = triageWithRules(symptoms)
           llmProvider = 'rules'
+          // Safety net: if the rules engine did not produce an emergency result,
+          // force an emergency outcome so emergency keywords never return routine.
+          if (llmResult.urgency !== 'emergency') {
+            llmResult = {
+              ...llmResult,
+              urgency: 'emergency',
+              recommendedTier: 'TERTIARY',
+            }
+          }
         } else {
           try {
             llmResult = await triageWithGemini(symptoms)
@@ -307,6 +321,9 @@ export const generateReferralToken = createServerFn({ method: 'POST' })
         if (!encryptionKeyHex) {
           throw new Error('TOKEN_ENCRYPTION_KEY environment variable is not set')
         }
+        if (!/^[0-9a-f]{64}$/i.test(encryptionKeyHex)) {
+          throw new Error('TOKEN_ENCRYPTION_KEY must be a 64-character hex string (32 bytes)')
+        }
 
         // Fix 13: look up a facility matching the session's recommended tier
         const tierEnum = (triageSession.recommendedTier ?? 'PRIMARY') as 'PRIMARY' | 'SECONDARY' | 'TERTIARY'
@@ -321,6 +338,9 @@ export const generateReferralToken = createServerFn({ method: 'POST' })
         }
 
         const key = Buffer.from(encryptionKeyHex, 'hex')
+        if (key.length !== 32) {
+          throw new Error('TOKEN_ENCRYPTION_KEY decoded to an unexpected length; expected 32 bytes')
+        }
         const iv = crypto.randomBytes(12)
         const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
 
