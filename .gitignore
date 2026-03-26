@@ -6,10 +6,12 @@ dist-ssr
 .env
 .nitro
 .tanstack
+.kombai
 .wrangler
 .output
 .vinxi
 __unconfig*
 todos.json
+routeTree.gen.ts
 
 /generated/prisma

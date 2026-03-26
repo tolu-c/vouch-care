@@ -9,9 +9,81 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifySuccessRouteImport } from './routes/verify-success'
+import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as TriageRouteImport } from './routes/triage'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PortalSelectRouteImport } from './routes/portal-select'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LinkHmoRouteImport } from './routes/link-hmo'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FindCareRouteImport } from './routes/find-care'
+import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VerifySuccessRoute = VerifySuccessRouteImport.update({
+  id: '/verify-success',
+  path: '/verify-success',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TriageRoute = TriageRouteImport.update({
+  id: '/triage',
+  path: '/triage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalSelectRoute = PortalSelectRouteImport.update({
+  id: '/portal-select',
+  path: '/portal-select',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LinkHmoRoute = LinkHmoRouteImport.update({
+  id: '/link-hmo',
+  path: '/link-hmo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindCareRoute = FindCareRouteImport.update({
+  id: '/find-care',
+  path: '/find-care',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookAppointmentRoute = BookAppointmentRouteImport.update({
+  id: '/book-appointment',
+  path: '/book-appointment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -26,31 +98,206 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book-appointment': typeof BookAppointmentRoute
+  '/find-care': typeof FindCareRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/home': typeof HomeRoute
+  '/link-hmo': typeof LinkHmoRoute
+  '/login': typeof LoginRoute
+  '/portal-select': typeof PortalSelectRoute
+  '/signup': typeof SignupRoute
+  '/support': typeof SupportRoute
+  '/triage': typeof TriageRoute
+  '/verify': typeof VerifyRoute
+  '/verify-success': typeof VerifySuccessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book-appointment': typeof BookAppointmentRoute
+  '/find-care': typeof FindCareRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/home': typeof HomeRoute
+  '/link-hmo': typeof LinkHmoRoute
+  '/login': typeof LoginRoute
+  '/portal-select': typeof PortalSelectRoute
+  '/signup': typeof SignupRoute
+  '/support': typeof SupportRoute
+  '/triage': typeof TriageRoute
+  '/verify': typeof VerifyRoute
+  '/verify-success': typeof VerifySuccessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/book-appointment': typeof BookAppointmentRoute
+  '/find-care': typeof FindCareRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/home': typeof HomeRoute
+  '/link-hmo': typeof LinkHmoRoute
+  '/login': typeof LoginRoute
+  '/portal-select': typeof PortalSelectRoute
+  '/signup': typeof SignupRoute
+  '/support': typeof SupportRoute
+  '/triage': typeof TriageRoute
+  '/verify': typeof VerifyRoute
+  '/verify-success': typeof VerifySuccessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/book-appointment'
+    | '/find-care'
+    | '/forgot-password'
+    | '/home'
+    | '/link-hmo'
+    | '/login'
+    | '/portal-select'
+    | '/signup'
+    | '/support'
+    | '/triage'
+    | '/verify'
+    | '/verify-success'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to:
+    | '/'
+    | '/about'
+    | '/book-appointment'
+    | '/find-care'
+    | '/forgot-password'
+    | '/home'
+    | '/link-hmo'
+    | '/login'
+    | '/portal-select'
+    | '/signup'
+    | '/support'
+    | '/triage'
+    | '/verify'
+    | '/verify-success'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/book-appointment'
+    | '/find-care'
+    | '/forgot-password'
+    | '/home'
+    | '/link-hmo'
+    | '/login'
+    | '/portal-select'
+    | '/signup'
+    | '/support'
+    | '/triage'
+    | '/verify'
+    | '/verify-success'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BookAppointmentRoute: typeof BookAppointmentRoute
+  FindCareRoute: typeof FindCareRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  HomeRoute: typeof HomeRoute
+  LinkHmoRoute: typeof LinkHmoRoute
+  LoginRoute: typeof LoginRoute
+  PortalSelectRoute: typeof PortalSelectRoute
+  SignupRoute: typeof SignupRoute
+  SupportRoute: typeof SupportRoute
+  TriageRoute: typeof TriageRoute
+  VerifyRoute: typeof VerifyRoute
+  VerifySuccessRoute: typeof VerifySuccessRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-success': {
+      id: '/verify-success'
+      path: '/verify-success'
+      fullPath: '/verify-success'
+      preLoaderRoute: typeof VerifySuccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/triage': {
+      id: '/triage'
+      path: '/triage'
+      fullPath: '/triage'
+      preLoaderRoute: typeof TriageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal-select': {
+      id: '/portal-select'
+      path: '/portal-select'
+      fullPath: '/portal-select'
+      preLoaderRoute: typeof PortalSelectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/link-hmo': {
+      id: '/link-hmo'
+      path: '/link-hmo'
+      fullPath: '/link-hmo'
+      preLoaderRoute: typeof LinkHmoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find-care': {
+      id: '/find-care'
+      path: '/find-care'
+      fullPath: '/find-care'
+      preLoaderRoute: typeof FindCareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-appointment': {
+      id: '/book-appointment'
+      path: '/book-appointment'
+      fullPath: '/book-appointment'
+      preLoaderRoute: typeof BookAppointmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -71,6 +318,18 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BookAppointmentRoute: BookAppointmentRoute,
+  FindCareRoute: FindCareRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  HomeRoute: HomeRoute,
+  LinkHmoRoute: LinkHmoRoute,
+  LoginRoute: LoginRoute,
+  PortalSelectRoute: PortalSelectRoute,
+  SignupRoute: SignupRoute,
+  SupportRoute: SupportRoute,
+  TriageRoute: TriageRoute,
+  VerifyRoute: VerifyRoute,
+  VerifySuccessRoute: VerifySuccessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
