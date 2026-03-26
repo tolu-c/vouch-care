@@ -1,5 +1,5 @@
 import { createMiddleware } from '@tanstack/react-start'
-import { getCookie } from '@tanstack/react-start/server'
+import { getCookie, setResponseStatus } from '@tanstack/react-start/server'
 import { errors as joseErrors, jwtVerify } from 'jose'
 
 function getJwtKey() {
@@ -13,7 +13,10 @@ export type AuthUser = { id: string; email: string; role: string }
 export const requireAuth = createMiddleware({ type: 'function' }).server(
   async ({ next }) => {
     const token = getCookie('session')
-    if (!token) throw new Error('Unauthorized')
+    if (!token) {
+      setResponseStatus(401)
+      throw new Error('Unauthorized')
+    }
 
     try {
       const { payload } = await jwtVerify(token, getJwtKey())
@@ -24,7 +27,11 @@ export const requireAuth = createMiddleware({ type: 'function' }).server(
       }
       return next({ context: { user } })
     } catch (err) {
-      if (err instanceof joseErrors.JWTExpired) throw new Error('Session expired')
+      if (err instanceof joseErrors.JWTExpired) {
+        setResponseStatus(401)
+        throw new Error('Session expired')
+      }
+      setResponseStatus(401)
       throw new Error('Unauthorized')
     }
   },
