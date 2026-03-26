@@ -1,6 +1,7 @@
 import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import type { ReactNode } from 'react'
 import VouchHeader from '../components/VouchHeader'
 import VouchFooter from '../components/VouchFooter'
 
@@ -57,7 +58,7 @@ const AUTH_PATHS = [
   '/triage',
 ]
 
-function AuthShell({ children }: { children: React.ReactNode }) {
+function AuthShell({ children }: { children: ReactNode }) {
   const { location } = useRouterState()
   const isAuth = AUTH_PATHS.includes(location.pathname)
   return (
@@ -69,7 +70,7 @@ function AuthShell({ children }: { children: React.ReactNode }) {
   )
 }
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

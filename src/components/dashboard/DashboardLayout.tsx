@@ -1,9 +1,10 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Home, Hospital, CalendarCheck, Bot, User, LogOut } from 'lucide-react'
+import type { ElementType, ReactNode } from 'react'
 
 export type DashboardTab = 'home' | 'find-care' | 'book-appointment' | 'support'
 
-const NAV_ITEMS: { id: DashboardTab; label: string; icon: React.ElementType; to: string }[] = [
+const NAV_ITEMS: { id: DashboardTab; label: string; icon: ElementType; to: string }[] = [
   { id: 'home', label: 'Home', icon: Home, to: '/home' },
   { id: 'find-care', label: 'Find Care', icon: Hospital, to: '/find-care' },
   { id: 'book-appointment', label: 'Book Appointment', icon: CalendarCheck, to: '/book-appointment' },
@@ -17,8 +18,8 @@ const SKY_BG = {
 
 interface DashboardLayoutProps {
   activeTab: DashboardTab
-  mobileSubHeader: React.ReactNode
-  children: React.ReactNode
+  mobileSubHeader: ReactNode
+  children: ReactNode
 }
 
 export default function DashboardLayout({

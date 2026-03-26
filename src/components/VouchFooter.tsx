@@ -1,12 +1,13 @@
+import { Link } from '@tanstack/react-router'
 import { Twitter, Facebook, Linkedin } from 'lucide-react'
 
 const QUICKLINKS = [
-  'Home',
-  'Profile',
-  'Find Care',
-  'Book Appointment',
-  'Emergency',
-  'V Assistant',
+  { label: 'Home', to: '/' },
+  { label: 'Find Care', to: '/find-care' },
+  { label: 'Book Appointment', to: '/book-appointment' },
+  { label: 'Support', to: '/support' },
+  { label: 'Login', to: '/login' },
+  { label: 'Create Account', to: '/portal-select' },
 ]
 
 export default function VouchFooter() {
@@ -32,13 +33,13 @@ export default function VouchFooter() {
             <nav aria-label="Footer quick links">
               <ul className="space-y-3">
                 {QUICKLINKS.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
+                  <li key={link.label}>
+                    <Link
+                      to={link.to as any}
                       className="text-orange font-semibold text-sm hover:text-orange-dark transition-colors"
                     >
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -54,23 +55,29 @@ export default function VouchFooter() {
             </address>
             <div className="flex items-center gap-4 mt-5 sm:justify-end lg:justify-end">
               <a
-                href="#"
+                href="https://twitter.com"
                 aria-label="Follow us on Twitter"
                 className="text-slate-600 hover:text-navy transition-colors"
+                target="_blank"
+                rel="noreferrer"
               >
                 <Twitter size={20} />
               </a>
               <a
-                href="#"
+                href="https://facebook.com"
                 aria-label="Follow us on Facebook"
                 className="text-slate-600 hover:text-navy transition-colors"
+                target="_blank"
+                rel="noreferrer"
               >
                 <Facebook size={20} />
               </a>
               <a
-                href="#"
+                href="https://linkedin.com"
                 aria-label="Connect on LinkedIn"
                 className="text-slate-600 hover:text-navy transition-colors"
+                target="_blank"
+                rel="noreferrer"
               >
                 <Linkedin size={20} />
               </a>

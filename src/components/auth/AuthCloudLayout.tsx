@@ -1,9 +1,10 @@
 import AuthHeader from './AuthHeader'
+import type { ReactNode } from 'react'
 
 interface AuthCloudLayoutProps {
   imageUrl: string
   imageAlt: string
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCloudLayoutProps) {

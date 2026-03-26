@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
+import type { CSSProperties } from 'react'
 import { useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import AuthHeader from '#/components/auth/AuthHeader'
@@ -22,7 +23,7 @@ const CLOUD_BG = {
     'linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)',
 }
 
-const MOON_STYLE: React.CSSProperties = {
+const MOON_STYLE: CSSProperties = {
   width: '380px',
   height: '380px',
   background:

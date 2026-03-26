@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import AuthCloudLayout from '#/components/auth/AuthCloudLayout'
 import FormError from '#/components/form/FormError'
@@ -86,9 +86,9 @@ function ForgotPasswordPage() {
 
         <p className="text-center text-slate-500 text-sm mt-6">
           Don&apos;t have an account yet?{' '}
-          <a href="#" className="text-[#3535C8] font-semibold hover:underline">
+          <Link to="/portal-select" className="text-[#3535C8] font-semibold hover:underline">
             Create Account
-          </a>
+          </Link>
         </p>
       </div>
     </AuthCloudLayout>

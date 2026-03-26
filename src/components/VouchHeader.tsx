@@ -4,11 +4,11 @@ import { Search, Menu, X } from 'lucide-react'
 
 
 const NAV_LINKS = [
-  { label: 'HOME', href: '/' },
-  { label: 'PROFILE', href: '/profile' },
-  { label: 'EMERGENCY', href: '/emergency' },
-  { label: 'BOOK', href: '/book' },
-  { label: 'MY COVERAGE', href: '/coverage' },
+  { label: 'HOME', to: '/' },
+  { label: 'FIND CARE', to: '/find-care' },
+  { label: 'BOOK', to: '/book-appointment' },
+  { label: 'TRIAGE', to: '/triage' },
+  { label: 'SUPPORT', to: '/support' },
 ]
 
 export default function VouchHeader() {
@@ -44,14 +44,14 @@ export default function VouchHeader() {
             aria-label="Main navigation"
           >
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
+                to={link.to as any}
                 className="text-[11px] font-semibold tracking-[0.14em] text-slate-600 hover:text-navy transition-colors relative group"
               >
                 {link.label}
                 <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-orange rounded-full transition-all duration-200 group-hover:w-full" />
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -100,14 +100,14 @@ export default function VouchHeader() {
             aria-label="Mobile navigation"
           >
             {NAV_LINKS.map((link) => (
-              <a
+              <Link
                 key={link.label}
-                href={link.href}
+                to={link.to as any}
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2.5 text-sm font-semibold tracking-wide text-slate-700 hover:text-navy hover:bg-slate-50 rounded-lg transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             <div className="pt-2 pb-1 border-t border-slate-100 mt-2">
               <button

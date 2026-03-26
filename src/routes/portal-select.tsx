@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import type { CSSProperties } from 'react'
 import AuthHeader from '#/components/auth/AuthHeader'
 
 export const Route = createFileRoute('/portal-select')({ component: PortalSelectPage })
@@ -8,7 +9,7 @@ const CLOUD_BG = {
     'linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)',
 }
 
-const MOON_STYLE: React.CSSProperties = {
+const MOON_STYLE: CSSProperties = {
   width: '260px',
   height: '260px',
   background:
@@ -95,7 +96,6 @@ function PortalSelectPage() {
 }
 
 function PortalCard({ portal }: { portal: Portal }) {
-  const navigate = useNavigate()
   return (
     <div className="flex flex-col gap-2">
       {/* Card */}
@@ -118,14 +118,11 @@ function PortalCard({ portal }: { portal: Portal }) {
       </div>
 
       {/* Get Started button */}
-      <Link to={portal.to}>
-        <button
-          type="button"
-          className="w-full bg-orange text-white font-display font-bold text-sm tracking-wide py-3 rounded-lg hover:bg-orange-dark transition-colors"
-          onClick={() => void navigate({ to: portal.to })}
-        >
-          Get Started
-        </button>
+      <Link
+        to={portal.to}
+        className="block w-full text-center bg-orange text-white font-display font-bold text-sm tracking-wide py-3 rounded-lg hover:bg-orange-dark transition-colors"
+      >
+        Get Started
       </Link>
 
       {/* Orange divider */}
