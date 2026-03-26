@@ -1,8 +1,8 @@
-import { ArrowLeft } from 'lucide-react'
-import { useRouter } from '@tanstack/react-router'
+import { useRouter } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
 export default function AuthHeader() {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <header className="bg-navy shrink-0 h-14 flex items-center justify-between px-5">
@@ -18,5 +18,5 @@ export default function AuthHeader() {
         VouchCare
       </span>
     </header>
-  )
+  );
 }

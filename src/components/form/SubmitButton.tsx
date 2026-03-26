@@ -1,10 +1,10 @@
-import type { ButtonHTMLAttributes } from 'react'
+import type { ButtonHTMLAttributes } from "react";
 
 interface SubmitButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  canSubmit: boolean
-  isSubmitting: boolean
-  idleLabel: string
-  submittingLabel: string
+  canSubmit: boolean;
+  isSubmitting: boolean;
+  idleLabel: string;
+  submittingLabel: string;
 }
 
 export default function SubmitButton({
@@ -24,5 +24,5 @@ export default function SubmitButton({
     >
       {isSubmitting ? submittingLabel : idleLabel}
     </button>
-  )
+  );
 }

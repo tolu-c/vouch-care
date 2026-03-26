@@ -1,25 +1,30 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import { Home, Hospital, CalendarCheck, Bot, User, LogOut } from 'lucide-react'
-import type { ElementType, ReactNode } from 'react'
+import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
+import { Bot, CalendarCheck, Home, Hospital, LogOut, User } from "lucide-react";
+import type { ReactNode } from "react";
 
-export type DashboardTab = 'home' | 'find-care' | 'book-appointment' | 'support'
+export type DashboardTab = "home" | "find-care" | "book-appointment" | "support";
 
-const NAV_ITEMS: { id: DashboardTab; label: string; icon: ElementType; to: string }[] = [
-  { id: 'home', label: 'Home', icon: Home, to: '/home' },
-  { id: 'find-care', label: 'Find Care', icon: Hospital, to: '/find-care' },
-  { id: 'book-appointment', label: 'Book Appointment', icon: CalendarCheck, to: '/book-appointment' },
-  { id: 'support', label: 'Support', icon: Bot, to: '/support' },
-]
+const NAV_ITEMS = linkOptions([
+  { to: "/home", id: "home" as DashboardTab, label: "Home", icon: Home },
+  { to: "/find-care", id: "find-care" as DashboardTab, label: "Find Care", icon: Hospital },
+  {
+    to: "/book-appointment",
+    id: "book-appointment" as DashboardTab,
+    label: "Book Appointment",
+    icon: CalendarCheck,
+  },
+  { to: "/support", id: "support" as DashboardTab, label: "Support", icon: Bot },
+]);
 
 const SKY_BG = {
   background:
-    'linear-gradient(160deg, #a8c4d8 0%, #bbd4e8 25%, #cfe3f0 50%, #ddeef8 75%, #edf6fc 100%)',
-}
+    "linear-gradient(160deg, #a8c4d8 0%, #bbd4e8 25%, #cfe3f0 50%, #ddeef8 75%, #edf6fc 100%)",
+};
 
 interface DashboardLayoutProps {
-  activeTab: DashboardTab
-  mobileSubHeader: ReactNode
-  children: ReactNode
+  activeTab: DashboardTab;
+  mobileSubHeader: ReactNode;
+  children: ReactNode;
 }
 
 export default function DashboardLayout({
@@ -27,14 +32,14 @@ export default function DashboardLayout({
   mobileSubHeader,
   children,
 }: DashboardLayoutProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    void navigate({ to: '/login' })
-  }
+    void navigate({ to: "/login" });
+  };
 
   return (
-    <div className="flex flex-col" style={{ height: '100dvh', overflow: 'hidden' }}>
+    <div className="flex flex-col" style={{ height: "100dvh", overflow: "hidden" }}>
       {/* VOUCHCARE Brand Bar */}
       <div className="bg-[#080d42] shrink-0 h-12 sm:h-14 flex items-center justify-between px-4 sm:px-6 z-50">
         <div className="w-8" />
@@ -74,24 +79,24 @@ export default function DashboardLayout({
           {/* Nav items */}
           <nav className="flex-1 p-3 space-y-1">
             {NAV_ITEMS.map((item) => {
-              const active = activeTab === item.id
-              const Icon = item.icon
+              const active = activeTab === item.id;
+              const Icon = item.icon;
               return (
                 <Link
                   key={item.id}
-                  to={item.to as any}
+                  to={item.to}
                   className={[
-                    'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200',
+                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200",
                     active
-                      ? 'bg-orange text-white shadow-sm'
-                      : 'text-white/70 hover:bg-white/10 hover:text-white',
-                  ].join(' ')}
-                  aria-current={active ? 'page' : undefined}
+                      ? "bg-orange text-white shadow-sm"
+                      : "text-white/70 hover:bg-white/10 hover:text-white",
+                  ].join(" ")}
+                  aria-current={active ? "page" : undefined}
                 >
                   <Icon size={19} strokeWidth={active ? 2.5 : 2} />
                   <span>{item.label}</span>
                 </Link>
-              )
+              );
             })}
           </nav>
 
@@ -128,26 +133,26 @@ export default function DashboardLayout({
         aria-label="Bottom navigation"
       >
         {NAV_ITEMS.map((item) => {
-          const active = activeTab === item.id
-          const Icon = item.icon
+          const active = activeTab === item.id;
+          const Icon = item.icon;
           return (
             <Link
               key={item.id}
-              to={item.to as any}
+              to={item.to}
               className={[
-                'flex flex-col items-center gap-0.5 min-w-[64px] px-2 py-1.5 rounded-xl transition-all duration-200',
-                active ? 'bg-orange' : '',
-              ].join(' ')}
-              aria-current={active ? 'page' : undefined}
+                "flex flex-col items-center gap-0.5 min-w-16 px-2 py-1.5 rounded-xl transition-all duration-200",
+                active ? "bg-orange" : "",
+              ].join(" ")}
+              aria-current={active ? "page" : undefined}
             >
               <Icon size={22} className="text-white" strokeWidth={active ? 2.5 : 1.8} />
               <span className="text-white text-[9px] sm:text-[10px] font-semibold text-center leading-tight">
                 {item.label}
               </span>
             </Link>
-          )
+          );
         })}
       </nav>
     </div>
-  )
+  );
 }
