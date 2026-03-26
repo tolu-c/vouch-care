@@ -1,7 +1,14 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
 import { ChevronDown } from 'lucide-react'
 import AuthHeader from '#/components/auth/AuthHeader'
+import FormError from '#/components/form/FormError'
+import SubmitButton from '#/components/form/SubmitButton'
+import {
+  AUTH_SELECT_INPUT_CLASS,
+  AUTH_TEXT_INPUT_CLASS,
+} from '#/components/form/formClasses'
+import { validateHmoId, validateRequiredSelection } from '#/lib/formValidators'
 
 export const Route = createFileRoute('/link-hmo')({ component: LinkHmoPage })
 
@@ -22,13 +29,16 @@ const HMO_OPTIONS = [
 
 function LinkHmoPage() {
   const navigate = useNavigate()
-  const [hmoId, setHmoId] = useState('')
-  const [selectedHmo, setSelectedHmo] = useState('')
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    void navigate({ to: '/verify' })
-  }
+  const form = useForm({
+    defaultValues: {
+      hmoId: '',
+      selectedHmo: '',
+    },
+    onSubmit: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 700))
+      void navigate({ to: '/verify' })
+    },
+  })
 
   return (
     <div className="flex flex-col min-h-screen" style={CLOUD_BG}>
@@ -75,43 +85,87 @@ function LinkHmoPage() {
             </h1>
             <p className="text-slate-500 text-sm mb-7">Now link your account to your HMO</p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="HMO ID"
-                value={hmoId}
-                onChange={(e) => setHmoId(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-hidden focus:border-navy transition-colors"
-                aria-label="HMO ID"
-              />
-
-              {/* SELECT HMO */}
-              <div className="relative">
-                <ChevronDown
-                  size={16}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-                />
-                <select
-                  value={selectedHmo}
-                  onChange={(e) => setSelectedHmo(e.target.value)}
-                  aria-label="Select HMO"
-                  className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-4 py-3 text-sm text-slate-600 outline-hidden focus:border-navy transition-colors appearance-none"
-                >
-                  <option value="">SELECT HMO</option>
-                  {HMO_OPTIONS.map((hmo) => (
-                    <option key={hmo} value={hmo}>
-                      {hmo}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-[#1B2880] text-white font-display font-bold text-base tracking-[0.16em] py-3.5 rounded-lg hover:bg-navy-dark transition-colors"
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                void form.handleSubmit()
+              }}
+              className="space-y-4"
+            >
+              <form.Field
+                name="hmoId"
+                validators={{
+                  onChange: ({ value }) => validateHmoId(value),
+                }}
               >
-                LINK UP
-              </button>
+                {(field) => (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="HMO ID"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      className={AUTH_TEXT_INPUT_CLASS}
+                      aria-label="HMO ID"
+                    />
+                    <FormError
+                      show={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                      error={field.state.meta.errors[0]}
+                    />
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field
+                name="selectedHmo"
+                validators={{
+                  onChange: ({ value }) => validateRequiredSelection(value, 'an HMO'),
+                }}
+              >
+                {(field) => (
+                  <div>
+                    <div className="relative">
+                      <ChevronDown
+                        size={16}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
+                      />
+                      <select
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        aria-label="Select HMO"
+                        className={AUTH_SELECT_INPUT_CLASS}
+                      >
+                        <option value="">SELECT HMO</option>
+                        {HMO_OPTIONS.map((hmo) => (
+                          <option key={hmo} value={hmo}>
+                            {hmo}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <FormError
+                      show={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                      error={field.state.meta.errors[0]}
+                    />
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <SubmitButton
+                    canSubmit={canSubmit}
+                    isSubmitting={isSubmitting}
+                    idleLabel="LINK UP"
+                    submittingLabel="LINKING..."
+                    className="w-full bg-[#1B2880] text-white font-display font-bold text-base tracking-[0.16em] py-3.5 rounded-lg hover:bg-navy-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  />
+                )}
+              />
             </form>
 
             <p className="text-center text-slate-500 text-sm mt-5">

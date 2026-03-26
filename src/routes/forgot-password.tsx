@@ -1,6 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useForm } from '@tanstack/react-form'
 import AuthCloudLayout from '#/components/auth/AuthCloudLayout'
+import FormError from '#/components/form/FormError'
+import SubmitButton from '#/components/form/SubmitButton'
+import { AUTH_TEXT_INPUT_CLASS } from '#/components/form/formClasses'
+import { validateContact } from '#/lib/formValidators'
 
 const FORGOT_IMAGE =
   'https://images.pexels.com/photos/5327864/pexels-photo-5327864.jpeg?auto=compress&cs=tinysrgb&w=700'
@@ -9,12 +13,15 @@ export const Route = createFileRoute('/forgot-password')({ component: ForgotPass
 
 function ForgotPasswordPage() {
   const navigate = useNavigate()
-  const [contact, setContact] = useState('')
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    void navigate({ to: '/verify' })
-  }
+  const form = useForm({
+    defaultValues: {
+      contact: '',
+    },
+    onSubmit: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 700))
+      void navigate({ to: '/verify' })
+    },
+  })
 
   return (
     <AuthCloudLayout
@@ -29,23 +36,52 @@ function ForgotPasswordPage() {
           Enter you email or phone number to reset it.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <input
-            type="text"
-            placeholder="Phone  Number or  Email"
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            className="w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-hidden focus:border-navy transition-colors"
-            aria-label="Phone number or email"
-            autoComplete="username"
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-[#1B2880] text-white font-display font-bold text-base tracking-[0.12em] py-3.5 rounded-lg hover:bg-navy-dark transition-colors"
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            void form.handleSubmit()
+          }}
+          className="space-y-5"
+        >
+          <form.Field
+            name="contact"
+            validators={{
+              onChange: ({ value }) => validateContact(value),
+            }}
           >
-            Reset Password
-          </button>
+            {(field) => (
+              <div>
+                <input
+                  type="text"
+                  placeholder="Phone  Number or  Email"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                  className={AUTH_TEXT_INPUT_CLASS}
+                  aria-label="Phone number or email"
+                  autoComplete="username"
+                />
+                <FormError
+                  show={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                  error={field.state.meta.errors[0]}
+                />
+              </div>
+            )}
+          </form.Field>
+
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit, isSubmitting]) => (
+              <SubmitButton
+                canSubmit={canSubmit}
+                isSubmitting={isSubmitting}
+                idleLabel="Reset Password"
+                submittingLabel="RESETTING..."
+                className="w-full bg-[#1B2880] text-white font-display font-bold text-base tracking-[0.12em] py-3.5 rounded-lg hover:bg-navy-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              />
+            )}
+          />
         </form>
 
         <p className="text-center text-slate-500 text-sm mt-6">

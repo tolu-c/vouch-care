@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 import { CalendarCheck, ChevronDown } from 'lucide-react'
 import DashboardLayout from '#/components/dashboard/DashboardLayout'
+import FormError from '#/components/form/FormError'
+import SubmitButton from '#/components/form/SubmitButton'
+import { PILLED_SELECT_INPUT_CLASS } from '#/components/form/formClasses'
+import { validateRequiredSelection } from '#/lib/formValidators'
 
 export const Route = createFileRoute('/book-appointment')({ component: BookAppointmentPage })
 
@@ -36,14 +41,24 @@ function BookSubHeader() {
 }
 
 function BookAppointmentPage() {
-  const [service, setService] = useState('')
-  const [facility, setFacility] = useState('')
   const [booked, setBooked] = useState(false)
-
-  const handleCheckIn = (e: React.FormEvent) => {
-    e.preventDefault()
-    setBooked(true)
-  }
+  const [bookingDetails, setBookingDetails] = useState<{ service: string; facility: string } | null>(
+    null,
+  )
+  const form = useForm({
+    defaultValues: {
+      service: '',
+      facility: '',
+    },
+    onSubmit: async ({ value }) => {
+      await new Promise((resolve) => setTimeout(resolve, 700))
+      setBookingDetails({
+        service: value.service,
+        facility: value.facility,
+      })
+      setBooked(true)
+    },
+  })
 
   return (
     <DashboardLayout activeTab="book-appointment" mobileSubHeader={<BookSubHeader />}>
@@ -88,18 +103,22 @@ function BookAppointmentPage() {
                   Booking Confirmed!
                 </h3>
                 <p className="text-slate-500 text-sm mb-1">
-                  <strong>{service || 'General Consultation'}</strong>
+                  <strong>{bookingDetails?.service || 'General Consultation'}</strong>
                 </p>
                 <p className="text-slate-500 text-sm">
                   at{' '}
-                  <strong>{facility || 'Lagos State University Teaching Hospital'}</strong>
+                  <strong>{bookingDetails?.facility || 'Lagos State University Teaching Hospital'}</strong>
                 </p>
                 <p className="text-slate-400 text-xs mt-3">
                   You'll receive a confirmation shortly.
                 </p>
                 <button
                   type="button"
-                  onClick={() => setBooked(false)}
+                  onClick={() => {
+                    setBooked(false)
+                    setBookingDetails(null)
+                    form.reset()
+                  }}
                   className="mt-6 px-8 py-2.5 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors"
                 >
                   Book Another
@@ -110,55 +129,98 @@ function BookAppointmentPage() {
                 className="rounded-2xl p-5 sm:p-6 shadow-sm w-full"
                 style={{ background: 'rgba(210,210,218,0.55)' }}
               >
-                <form onSubmit={handleCheckIn} className="space-y-4">
-                  {/* Select Service */}
-                  <div className="relative">
-                    <select
-                      value={service}
-                      onChange={(e) => setService(e.target.value)}
-                      aria-label="Select service"
-                      className="w-full bg-white rounded-full px-5 py-3.5 text-sm text-navy font-semibold outline-none appearance-none focus:ring-2 focus:ring-navy/20 transition-all cursor-pointer"
-                    >
-                      <option value="">Select Service</option>
-                      {SERVICES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={16}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-navy pointer-events-none"
-                    />
-                  </div>
-
-                  {/* Select Facility */}
-                  <div className="relative">
-                    <select
-                      value={facility}
-                      onChange={(e) => setFacility(e.target.value)}
-                      aria-label="Select facility"
-                      className="w-full bg-white rounded-full px-5 py-3.5 text-sm text-navy font-semibold outline-none appearance-none focus:ring-2 focus:ring-navy/20 transition-all cursor-pointer"
-                    >
-                      <option value="">Select Facility</option>
-                      {FACILITIES.map((f) => (
-                        <option key={f} value={f}>
-                          {f}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={16}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-navy pointer-events-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-navy text-white font-display font-bold text-base tracking-wide py-3.5 rounded-xl hover:bg-navy-dark transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    void form.handleSubmit()
+                  }}
+                  className="space-y-4"
+                >
+                  <form.Field
+                    name="service"
+                    validators={{
+                      onChange: ({ value }) => validateRequiredSelection(value, 'a service'),
+                    }}
                   >
-                    Check In
-                  </button>
+                    {(field) => (
+                      <div>
+                        <div className="relative">
+                          <select
+                            value={field.state.value}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            onBlur={field.handleBlur}
+                            aria-label="Select service"
+                            className={PILLED_SELECT_INPUT_CLASS}
+                          >
+                            <option value="">Select Service</option>
+                            {SERVICES.map((s) => (
+                              <option key={s} value={s}>
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown
+                            size={16}
+                            className="absolute right-5 top-1/2 -translate-y-1/2 text-navy pointer-events-none"
+                          />
+                        </div>
+                        <FormError
+                          show={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                          error={field.state.meta.errors[0]}
+                        />
+                      </div>
+                    )}
+                  </form.Field>
+
+                  <form.Field
+                    name="facility"
+                    validators={{
+                      onChange: ({ value }) => validateRequiredSelection(value, 'a facility'),
+                    }}
+                  >
+                    {(field) => (
+                      <div>
+                        <div className="relative">
+                          <select
+                            value={field.state.value}
+                            onChange={(e) => field.handleChange(e.target.value)}
+                            onBlur={field.handleBlur}
+                            aria-label="Select facility"
+                            className={PILLED_SELECT_INPUT_CLASS}
+                          >
+                            <option value="">Select Facility</option>
+                            {FACILITIES.map((f) => (
+                              <option key={f} value={f}>
+                                {f}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown
+                            size={16}
+                            className="absolute right-5 top-1/2 -translate-y-1/2 text-navy pointer-events-none"
+                          />
+                        </div>
+                        <FormError
+                          show={field.state.meta.isTouched && field.state.meta.errors.length > 0}
+                          error={field.state.meta.errors[0]}
+                        />
+                      </div>
+                    )}
+                  </form.Field>
+
+                  <form.Subscribe
+                    selector={(state) => [state.canSubmit, state.isSubmitting]}
+                    children={([canSubmit, isSubmitting]) => (
+                      <SubmitButton
+                        canSubmit={canSubmit}
+                        isSubmitting={isSubmitting}
+                        idleLabel="Check In"
+                        submittingLabel="Checking In..."
+                        className="w-full bg-navy text-white font-display font-bold text-base tracking-wide py-3.5 rounded-xl hover:bg-navy-dark transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+                      />
+                    )}
+                  />
                 </form>
               </div>
             )}
