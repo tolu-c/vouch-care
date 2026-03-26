@@ -1,10 +1,10 @@
-import { useScrollReveal } from '#/hooks/useScrollReveal'
+import { useScrollReveal } from "#/hooks/useScrollReveal";
 
 const HERO_IMAGE =
-  'https://images.pexels.com/photos/1770818/pexels-photo-1770818.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop'
+  "https://images.pexels.com/photos/1770818/pexels-photo-1770818.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";
 
 export default function HeroSection() {
-  const cardRef = useScrollReveal()
+  const cardRef = useScrollReveal();
 
   return (
     <section
@@ -21,7 +21,7 @@ export default function HeroSection() {
 
       {/* Layered dark overlay for depth */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-navy-dark/85 via-navy/80 to-navy/70"
+        className="absolute inset-0 bg-linear-to-br from-navy-dark/85 via-navy/80 to-navy/70"
         aria-hidden="true"
       />
 
@@ -36,9 +36,9 @@ export default function HeroSection() {
         ref={cardRef}
         className="reveal relative z-10 w-full max-w-2xl mx-auto text-center px-8 py-14 sm:py-18 rounded-3xl border border-white/10 shadow-2xl"
         style={{
-          background: 'rgba(14, 21, 87, 0.82)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          background: "rgba(14, 21, 87, 0.82)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         }}
       >
         {/* Eyebrow tag */}
@@ -50,13 +50,11 @@ export default function HeroSection() {
         </div>
 
         <h1 className="font-display font-extrabold text-white text-[2.1rem] sm:text-[3rem] leading-[1.08] tracking-tight mb-6">
-          Get the Right Care{' '}
-          <span className="text-orange">Instantly</span>
+          Get the Right Care <span className="text-orange">Instantly</span>
         </h1>
 
         <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-10 max-w-lg mx-auto">
-          AI-powered triage sends you to the correct hospital tier with a guaranteed
-          payment token.
+          AI-powered triage sends you to the correct hospital tier with a guaranteed payment token.
         </p>
 
         <button type="button" className="btn-orange text-base sm:text-lg px-10 py-4">
@@ -64,5 +62,5 @@ export default function HeroSection() {
         </button>
       </div>
     </section>
-  )
+  );
 }

@@ -1,35 +1,43 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
-import { CalendarCheck, ChevronDown } from 'lucide-react'
-import DashboardLayout from '#/components/dashboard/DashboardLayout'
-import FormError from '#/components/form/FormError'
-import SubmitButton from '#/components/form/SubmitButton'
-import { PILLED_SELECT_INPUT_CLASS } from '#/components/form/formClasses'
-import { validateRequiredSelection } from '#/lib/formValidators'
+import { useForm } from "@tanstack/react-form";
+import { createFileRoute } from "@tanstack/react-router";
+import { CalendarCheck, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import DashboardLayout from "#/components/dashboard/DashboardLayout";
+import FormError from "#/components/form/FormError";
+import { PILLED_SELECT_INPUT_CLASS } from "#/components/form/formClasses";
+import SubmitButton from "#/components/form/SubmitButton";
+import { validateRequiredSelection } from "#/lib/formValidators";
 
-export const Route = createFileRoute('/book-appointment')({ component: BookAppointmentPage })
+export const Route = createFileRoute("/_app/book-appointment")({ component: BookAppointmentPage });
 
 const DOCTOR_IMAGE =
-  'https://images.pexels.com/photos/7578798/pexels-photo-7578798.jpeg?auto=compress&cs=tinysrgb&w=800'
+  "https://images.pexels.com/photos/7578798/pexels-photo-7578798.jpeg?auto=compress&cs=tinysrgb&w=800";
 
 const SERVICES = [
-  'General Consultation',
-  'Emergency Care',
-  'Specialist Referral',
-  'Diagnostic Imaging',
-  'Lab Tests',
-  'Physical Therapy',
-  'Mental Health',
-]
+  "General Consultation",
+  "Emergency Care",
+  "Specialist Referral",
+  "Diagnostic Imaging",
+  "Lab Tests",
+  "Physical Therapy",
+  "Mental Health",
+];
 
 const FACILITIES = [
-  'Lagos State University Teaching Hospital',
-  'Lily Hospital Lagos',
-  'Reddington Hospital',
-  'St. Nicholas Hospital',
-  'Island General Hospital',
-]
+  "Lagos State University Teaching Hospital",
+  "Lily Hospital Lagos",
+  "Reddington Hospital",
+  "St. Nicholas Hospital",
+  "Island General Hospital",
+];
+
+const HERO_IMAGE_CONTAINER_STYLE = { height: "320px" } as const;
+
+const IMAGE_POSITION_STYLE = { objectPosition: "center center" } as const;
+
+const CONFIRMED_CARD_STYLE = { background: "rgba(255,255,255,0.60)" } as const;
+
+const FORM_CARD_STYLE = { background: "rgba(210,210,218,0.55)" } as const;
 
 function BookSubHeader() {
   return (
@@ -37,28 +45,29 @@ function BookSubHeader() {
       <CalendarCheck size={24} className="text-white" />
       <h2 className="font-display font-bold text-white text-lg tracking-wide">Book Service</h2>
     </div>
-  )
+  );
 }
 
 function BookAppointmentPage() {
-  const [booked, setBooked] = useState(false)
-  const [bookingDetails, setBookingDetails] = useState<{ service: string; facility: string } | null>(
-    null,
-  )
+  const [booked, setBooked] = useState(false);
+  const [bookingDetails, setBookingDetails] = useState<{
+    service: string;
+    facility: string;
+  } | null>(null);
   const form = useForm({
     defaultValues: {
-      service: '',
-      facility: '',
+      service: "",
+      facility: "",
     },
     onSubmit: async ({ value }) => {
-      await new Promise((resolve) => setTimeout(resolve, 700))
+      await new Promise((resolve) => setTimeout(resolve, 700));
       setBookingDetails({
         service: value.service,
         facility: value.facility,
-      })
-      setBooked(true)
+      });
+      setBooked(true);
     },
-  })
+  });
 
   return (
     <DashboardLayout activeTab="book-appointment" mobileSubHeader={<BookSubHeader />}>
@@ -72,12 +81,12 @@ function BookAppointmentPage() {
         <div className="flex flex-col lg:flex-row gap-0">
           {/* Hero image + banner */}
           <div className="lg:w-1/2 shrink-0 flex flex-col">
-            <div className="overflow-hidden" style={{ height: '320px' }}>
+            <div className="overflow-hidden" style={HERO_IMAGE_CONTAINER_STYLE}>
               <img
                 src={DOCTOR_IMAGE}
                 alt="Doctor in white coat consulting patient at table with medical documents — cottonbro studio on Pexels"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center center' }}
+                style={IMAGE_POSITION_STYLE}
                 loading="lazy"
               />
             </div>
@@ -94,7 +103,7 @@ function BookAppointmentPage() {
             {booked ? (
               <div
                 className="rounded-2xl p-8 text-center shadow-sm w-full"
-                style={{ background: 'rgba(255,255,255,0.60)' }}
+                style={CONFIRMED_CARD_STYLE}
               >
                 <div className="w-16 h-16 rounded-full bg-green/15 flex items-center justify-center mx-auto mb-4">
                   <CalendarCheck size={32} className="text-green" />
@@ -103,11 +112,13 @@ function BookAppointmentPage() {
                   Booking Confirmed!
                 </h3>
                 <p className="text-slate-500 text-sm mb-1">
-                  <strong>{bookingDetails?.service || 'General Consultation'}</strong>
+                  <strong>{bookingDetails?.service || "General Consultation"}</strong>
                 </p>
                 <p className="text-slate-500 text-sm">
-                  at{' '}
-                  <strong>{bookingDetails?.facility || 'Lagos State University Teaching Hospital'}</strong>
+                  at{" "}
+                  <strong>
+                    {bookingDetails?.facility || "Lagos State University Teaching Hospital"}
+                  </strong>
                 </p>
                 <p className="text-slate-400 text-xs mt-3">
                   You'll receive a confirmation shortly.
@@ -115,9 +126,9 @@ function BookAppointmentPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    setBooked(false)
-                    setBookingDetails(null)
-                    form.reset()
+                    setBooked(false);
+                    setBookingDetails(null);
+                    form.reset();
                   }}
                   className="mt-6 px-8 py-2.5 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors"
                 >
@@ -125,22 +136,19 @@ function BookAppointmentPage() {
                 </button>
               </div>
             ) : (
-              <div
-                className="rounded-2xl p-5 sm:p-6 shadow-sm w-full"
-                style={{ background: 'rgba(210,210,218,0.55)' }}
-              >
+              <div className="rounded-2xl p-5 sm:p-6 shadow-sm w-full" style={FORM_CARD_STYLE}>
                 <form
                   onSubmit={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    void form.handleSubmit()
+                    e.preventDefault();
+                    e.stopPropagation();
+                    void form.handleSubmit();
                   }}
                   className="space-y-4"
                 >
                   <form.Field
                     name="service"
                     validators={{
-                      onChange: ({ value }) => validateRequiredSelection(value, 'a service'),
+                      onChange: ({ value }) => validateRequiredSelection(value, "a service"),
                     }}
                   >
                     {(field) => (
@@ -176,7 +184,7 @@ function BookAppointmentPage() {
                   <form.Field
                     name="facility"
                     validators={{
-                      onChange: ({ value }) => validateRequiredSelection(value, 'a facility'),
+                      onChange: ({ value }) => validateRequiredSelection(value, "a facility"),
                     }}
                   >
                     {(field) => (
@@ -209,9 +217,8 @@ function BookAppointmentPage() {
                     )}
                   </form.Field>
 
-                  <form.Subscribe
-                    selector={(state) => [state.canSubmit, state.isSubmitting]}
-                    children={([canSubmit, isSubmitting]) => (
+                  <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+                    {([canSubmit, isSubmitting]) => (
                       <SubmitButton
                         canSubmit={canSubmit}
                         isSubmitting={isSubmitting}
@@ -220,7 +227,7 @@ function BookAppointmentPage() {
                         className="w-full bg-navy text-white font-display font-bold text-base tracking-wide py-3.5 rounded-xl hover:bg-navy-dark transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
                       />
                     )}
-                  />
+                  </form.Subscribe>
                 </form>
               </div>
             )}
@@ -228,6 +235,5 @@ function BookAppointmentPage() {
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }
-

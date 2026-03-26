@@ -1,10 +1,10 @@
-import AuthHeader from './AuthHeader'
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
+import AuthHeader from "./AuthHeader";
 
 interface AuthCloudLayoutProps {
-  imageUrl: string
-  imageAlt: string
-  children: ReactNode
+  imageUrl: string;
+  imageAlt: string;
+  children: ReactNode;
 }
 
 export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCloudLayoutProps) {
@@ -13,7 +13,7 @@ export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCl
       className="flex flex-col min-h-screen"
       style={{
         background:
-          'linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)',
+          "linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)",
       }}
     >
       <AuthHeader />
@@ -24,11 +24,11 @@ export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCl
           className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full pointer-events-none select-none"
           style={{
             background:
-              'radial-gradient(circle at 38% 32%, #f8f8fc, #dce4ef 45%, #c0ccd8 72%, #a8b8cc)',
+              "radial-gradient(circle at 38% 32%, #f8f8fc, #dce4ef 45%, #c0ccd8 72%, #a8b8cc)",
             boxShadow:
-              'inset -8px -8px 20px rgba(0,0,0,0.1), inset 6px 6px 16px rgba(255,255,255,0.55)',
+              "inset -8px -8px 20px rgba(0,0,0,0.1), inset 6px 6px 16px rgba(255,255,255,0.55)",
             opacity: 0.75,
-            marginTop: '-3rem',
+            marginTop: "-3rem",
           }}
           aria-hidden="true"
         />
@@ -40,7 +40,7 @@ export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCl
             <img
               src={imageUrl}
               alt={imageAlt}
-              className="w-full aspect-[4/3] object-cover"
+              className="w-full aspect-4/3 object-cover"
               loading="eager"
               decoding="async"
             />
@@ -51,5 +51,5 @@ export default function AuthCloudLayout({ imageUrl, imageAlt, children }: AuthCl
         </div>
       </div>
     </div>
-  )
+  );
 }

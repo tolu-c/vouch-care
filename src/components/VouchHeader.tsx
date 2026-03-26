@@ -1,30 +1,29 @@
-import { useState, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
-import { Search, Menu, X } from 'lucide-react'
-
+import { Link } from "@tanstack/react-router";
+import { Menu, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
-  { label: 'HOME', to: '/' },
-  { label: 'FIND CARE', to: '/find-care' },
-  { label: 'BOOK', to: '/book-appointment' },
-  { label: 'TRIAGE', to: '/triage' },
-  { label: 'SUPPORT', to: '/support' },
-]
+  { label: "HOME", to: "/" },
+  { label: "FIND CARE", to: "/find-care" },
+  { label: "BOOK", to: "/book-appointment" },
+  { label: "TRIAGE", to: "/triage" },
+  { label: "SUPPORT", to: "/support" },
+];
 
 export default function VouchHeader() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header
       className={`sticky top-0 z-50 bg-white transition-all duration-300 ${
-        isScrolled ? 'shadow-md' : 'border-b border-slate-100'
+        isScrolled ? "shadow-md" : "border-b border-slate-100"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,13 +38,11 @@ export default function VouchHeader() {
           </Link>
 
           {/* Desktop nav */}
-          <nav
-            className="hidden lg:flex items-center gap-7"
-            aria-label="Main navigation"
-          >
+          <nav className="hidden lg:flex items-center gap-7" aria-label="Main navigation">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
+                // biome-ignore lint/suspicious/noExplicitAny: TanStack Router requires explicit cast for dynamic route arrays
                 to={link.to as any}
                 className="text-[11px] font-semibold tracking-[0.14em] text-slate-600 hover:text-navy transition-colors relative group"
               >
@@ -84,7 +81,7 @@ export default function VouchHeader() {
             <button
               type="button"
               onClick={() => setMenuOpen((o) => !o)}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               className="p-2 text-navy rounded-lg hover:bg-slate-100 transition-colors"
             >
@@ -102,6 +99,7 @@ export default function VouchHeader() {
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.label}
+                // biome-ignore lint/suspicious/noExplicitAny: TanStack Router requires explicit cast for dynamic route arrays
                 to={link.to as any}
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2.5 text-sm font-semibold tracking-wide text-slate-700 hover:text-navy hover:bg-slate-50 rounded-lg transition-colors"
@@ -122,5 +120,5 @@ export default function VouchHeader() {
         )}
       </div>
     </header>
-  )
+  );
 }

@@ -1,15 +1,25 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { Bell, CalendarDays, FastForward, ListFilter, Mic, UserCircle } from 'lucide-react'
-import DashboardLayout from '#/components/dashboard/DashboardLayout'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Bell, CalendarDays, FastForward, ListFilter, Mic, UserCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import DashboardLayout from "#/components/dashboard/DashboardLayout";
 
-export const Route = createFileRoute('/home')({ component: HomePage })
+export const Route = createFileRoute("/_app/home")({ component: HomePage });
 
 const QR_URL =
-  'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VOUCHCARE-REF-TOKEN-2025-CHI001&color=000000&bgcolor=ffffff'
+  "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VOUCHCARE-REF-TOKEN-2025-CHI001&color=000000&bgcolor=ffffff";
 
 const SAMPLE_SYMPTOMS =
-  'I have Severe headache, since morning, i feel nauseous , I feel like I am loosing consciousness'
+  "I have Severe headache, since morning, i feel nauseous , I feel like I am loosing consciousness";
+
+const GLASS_CARD_STYLE = {
+  background: "rgba(255,255,255,0.42)",
+  backdropFilter: "blur(20px)",
+  WebkitBackdropFilter: "blur(20px)",
+  border: "1px solid rgba(255,255,255,0.65)",
+  boxShadow: "0 8px 32px rgba(27,40,128,0.10)",
+} as const;
+
+const PEACH_BG_STYLE = { background: "#fdd5c3" } as const;
 
 function HomeSubHeader() {
   return (
@@ -39,21 +49,22 @@ function HomeSubHeader() {
           <Bell size={20} />
           <span
             className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-orange rounded-full border-2 border-navy"
+            role="status"
             aria-label="1 new notification"
           />
         </button>
       </div>
     </div>
-  )
+  );
 }
 
 function HomePage() {
-  const navigate = useNavigate()
-  const [symptoms, setSymptoms] = useState(SAMPLE_SYMPTOMS)
+  const navigate = useNavigate();
+  const [symptoms, setSymptoms] = useState(SAMPLE_SYMPTOMS);
 
-  const handleAnalyze = () => {
-    void navigate({ to: '/triage' })
-  }
+  const handleAnalyze = useCallback(() => {
+    void navigate({ to: "/triage" });
+  }, [navigate]);
 
   return (
     <DashboardLayout activeTab="home" mobileSubHeader={<HomeSubHeader />}>
@@ -61,9 +72,7 @@ function HomePage() {
       <div className="hidden lg:flex items-center justify-between px-8 pt-8 pb-2">
         <div>
           <p className="text-navy/60 text-xs font-bold tracking-widest uppercase">Today</p>
-          <h2 className="font-display font-bold text-navy text-2xl">
-            Good morning, Chisomaga 👋
-          </h2>
+          <h2 className="font-display font-bold text-navy text-2xl">Good morning, Chisomaga 👋</h2>
         </div>
         <button
           type="button"
@@ -77,16 +86,7 @@ function HomePage() {
 
       <div className="px-4 sm:px-6 lg:px-8 py-5 space-y-6 max-w-2xl lg:max-w-4xl mx-auto w-full pb-6">
         {/* Symptom checker card */}
-        <div
-          className="rounded-2xl p-5 sm:p-6"
-          style={{
-            background: 'rgba(255,255,255,0.42)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.65)',
-            boxShadow: '0 8px 32px rgba(27,40,128,0.10)',
-          }}
-        >
+        <div className="rounded-2xl p-5 sm:p-6" style={GLASS_CARD_STYLE}>
           <h2 className="font-display font-bold text-navy text-xl sm:text-2xl text-center leading-snug mb-5">
             How are you feeling today?
           </h2>
@@ -120,13 +120,8 @@ function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Activity */}
           <div>
-            <h3 className="font-display font-semibold text-navy text-base mb-3">
-              Recent Activity
-            </h3>
-            <div
-              className="rounded-2xl overflow-hidden shadow-sm"
-              style={{ background: '#fdd5c3' }}
-            >
+            <h3 className="font-display font-semibold text-navy text-base mb-3">Recent Activity</h3>
+            <div className="rounded-2xl overflow-hidden shadow-sm" style={PEACH_BG_STYLE}>
               <div className="flex items-start gap-4 p-4">
                 <img
                   src={QR_URL}
@@ -158,7 +153,7 @@ function HomePage() {
             <button
               type="button"
               className="w-full flex items-center gap-4 px-5 py-4 rounded-full shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 text-left"
-              style={{ background: '#fdd5c3' }}
+              style={PEACH_BG_STYLE}
               aria-label="View General Check up appointment"
             >
               <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center shrink-0">
@@ -174,5 +169,5 @@ function HomePage() {
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }

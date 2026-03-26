@@ -1,9 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-} from "@tanstack/react-start/server";
+import { deleteCookie, getCookie, setCookie } from "@tanstack/react-start/server";
 import bcrypt from "bcryptjs";
 import { errors as joseErrors, jwtVerify, SignJWT } from "jose";
 import { db } from "@/server/lib/db";
@@ -18,6 +14,16 @@ function getJwtKey() {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error("JWT_SECRET environment variable is not set");
   return new TextEncoder().encode(secret);
+}
+
+// SHA-256 hex digest of the raw token — safe to store and index because it
+// cannot be reversed to the original value, enabling O(1) lookup by selector.
+async function hashTokenSelector(rawToken: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(rawToken);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 async function issueSession(user: { id: string; email: string; role: string }) {
@@ -38,10 +44,14 @@ async function issueSession(user: { id: string; email: string; role: string }) {
   });
 
   const rawToken = crypto.randomUUID();
-  const tokenHash = await bcrypt.hash(rawToken, 10);
+  const [tokenHash, tokenSelector] = await Promise.all([
+    bcrypt.hash(rawToken, 10),
+    hashTokenSelector(rawToken),
+  ]);
   await db.refreshToken.create({
     data: {
       userId: user.id,
+      tokenSelector,
       token: tokenHash,
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
@@ -73,7 +83,10 @@ async function dispatchOtp(email: string): Promise<void> {
     throw new Error("Please wait before requesting a new code");
   }
 
-  const code = String(crypto.getRandomValues(new Uint32Array(1))[0]! % 1_000_000).padStart(6, "0");
+  const code = String((crypto.getRandomValues(new Uint32Array(1))[0] ?? 0) % 1_000_000).padStart(
+    6,
+    "0",
+  );
   const hash = await bcrypt.hash(code, 10);
 
   await redis.set(`otp:${email}`, JSON.stringify({ hash, attempts: 0 }), { ex: 600 });
@@ -87,59 +100,51 @@ async function dispatchOtp(email: string): Promise<void> {
 
 export const signup = createServerFn({ method: "POST" })
   .inputValidator(signupSchema)
-  .handler(
-    async ({
-      data,
-    }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
-      try {
-        const { email, password } = data;
+  .handler(async ({ data }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
+    try {
+      const { email, password } = data;
 
-        const existing = await db.user.findUnique({ where: { email } });
-        if (existing) {
-          return { success: false, error: "An account with this email already exists", data: null };
-        }
-
-        const passwordHash = await bcrypt.hash(password, 10);
-        const user = await db.user.create({
-          data: { email, passwordHash },
-        });
-
-        const session = await issueSession(user);
-        return { success: true, data: session };
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Signup failed";
-        return { success: false, error: message, data: null };
+      const existing = await db.user.findUnique({ where: { email } });
+      if (existing) {
+        return { success: false, error: "An account with this email already exists", data: null };
       }
-    },
-  );
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      const user = await db.user.create({
+        data: { email, passwordHash },
+      });
+
+      const session = await issueSession(user);
+      return { success: true, data: session };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Signup failed";
+      return { success: false, error: message, data: null };
+    }
+  });
 
 export const login = createServerFn({ method: "POST" })
   .inputValidator(loginSchema)
-  .handler(
-    async ({
-      data,
-    }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
-      try {
-        const { email, password } = data;
+  .handler(async ({ data }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
+    try {
+      const { email, password } = data;
 
-        const user = await db.user.findUnique({ where: { email } });
-        if (!user || !user.passwordHash) {
-          return { success: false, error: "Invalid email or password", data: null };
-        }
-
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) {
-          return { success: false, error: "Invalid email or password", data: null };
-        }
-
-        const session = await issueSession(user);
-        return { success: true, data: session };
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Login failed";
-        return { success: false, error: message, data: null };
+      const user = await db.user.findUnique({ where: { email } });
+      if (!user?.passwordHash) {
+        return { success: false, error: "Invalid email or password", data: null };
       }
-    },
-  );
+
+      const valid = await bcrypt.compare(password, user.passwordHash);
+      if (!valid) {
+        return { success: false, error: "Invalid email or password", data: null };
+      }
+
+      const session = await issueSession(user);
+      return { success: true, data: session };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Login failed";
+      return { success: false, error: message, data: null };
+    }
+  });
 
 export const sendOtp = createServerFn({ method: "POST" })
   .inputValidator(sendOtpSchema)
@@ -156,58 +161,54 @@ export const sendOtp = createServerFn({ method: "POST" })
 
 export const verifyOtp = createServerFn({ method: "POST" })
   .inputValidator(verifyOtpSchema)
-  .handler(
-    async ({
-      data,
-    }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
-      try {
-        const { email, otp } = data;
-        const redis = getRedis();
+  .handler(async ({ data }): Promise<ApiResponse<{ userId: string; role: string } | null>> => {
+    try {
+      const { email, otp } = data;
+      const redis = getRedis();
 
-        const raw = await redis.get<string>(`otp:${email}`);
-        if (!raw) {
-          return { success: false, error: "OTP expired or not found", data: null };
-        }
-
-        const stored = JSON.parse(raw) as { hash: string; attempts: number };
-        const valid = await bcrypt.compare(otp, stored.hash);
-
-        if (!valid) {
-          const newAttempts = stored.attempts + 1;
-          if (newAttempts >= 5) {
-            await redis.del(`otp:${email}`);
-            return {
-              success: false,
-              error: "Too many failed attempts. Please request a new code.",
-              data: null,
-            };
-          }
-          const remainingTtl = await redis.ttl(`otp:${email}`);
-          await redis.set(
-            `otp:${email}`,
-            JSON.stringify({ hash: stored.hash, attempts: newAttempts }),
-            { ex: remainingTtl > 0 ? remainingTtl : 1 },
-          );
-          return { success: false, error: "Invalid OTP", data: null };
-        }
-
-        await redis.del(`otp:${email}`);
-        await db.otpSession.deleteMany({ where: { email } });
-
-        const user = await db.user.upsert({
-          where: { email },
-          create: { email },
-          update: {},
-        });
-
-        const session = await issueSession(user);
-        return { success: true, data: session };
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Verification failed";
-        return { success: false, error: message, data: null };
+      const raw = await redis.get<string>(`otp:${email}`);
+      if (!raw) {
+        return { success: false, error: "OTP expired or not found", data: null };
       }
-    },
-  );
+
+      const stored = JSON.parse(raw) as { hash: string; attempts: number };
+      const valid = await bcrypt.compare(otp, stored.hash);
+
+      if (!valid) {
+        const newAttempts = stored.attempts + 1;
+        if (newAttempts >= 5) {
+          await redis.del(`otp:${email}`);
+          return {
+            success: false,
+            error: "Too many failed attempts. Please request a new code.",
+            data: null,
+          };
+        }
+        const remainingTtl = await redis.ttl(`otp:${email}`);
+        await redis.set(
+          `otp:${email}`,
+          JSON.stringify({ hash: stored.hash, attempts: newAttempts }),
+          { ex: remainingTtl > 0 ? remainingTtl : 1 },
+        );
+        return { success: false, error: "Invalid OTP", data: null };
+      }
+
+      await redis.del(`otp:${email}`);
+      await db.otpSession.deleteMany({ where: { email } });
+
+      const user = await db.user.upsert({
+        where: { email },
+        create: { email },
+        update: {},
+      });
+
+      const session = await issueSession(user);
+      return { success: true, data: session };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Verification failed";
+      return { success: false, error: message, data: null };
+    }
+  });
 
 export const getSession = createServerFn({ method: "GET" }).handler(
   async (): Promise<ApiResponse<{ id: string; email: string; role: string } | null>> => {
@@ -220,8 +221,8 @@ export const getSession = createServerFn({ method: "GET" }).handler(
         success: true,
         data: {
           id: payload.sub as string,
-          email: payload["email"] as string,
-          role: payload["role"] as string,
+          email: payload.email as string,
+          role: payload.role as string,
         },
       };
     } catch (err) {
@@ -239,27 +240,19 @@ export const logout = createServerFn({ method: "POST" }).handler(
       const rawToken = getCookie("refresh_token");
 
       if (rawToken) {
-        const sessionToken = getCookie("session");
-        if (sessionToken) {
-          try {
-            const { payload } = await jwtVerify(sessionToken, getJwtKey());
-            const userId = payload.sub as string;
-            const rows = await db.refreshToken.findMany({
-              where: { userId, revoked: false },
+        try {
+          const tokenSelector = await hashTokenSelector(rawToken);
+          const row = await db.refreshToken.findFirst({
+            where: { tokenSelector, revoked: false },
+          });
+          if (row && (await bcrypt.compare(rawToken, row.token))) {
+            await db.refreshToken.update({
+              where: { id: row.id },
+              data: { revoked: true },
             });
-            for (const row of rows) {
-              const matches = await bcrypt.compare(rawToken, row.token);
-              if (matches) {
-                await db.refreshToken.update({
-                  where: { id: row.id },
-                  data: { revoked: true },
-                });
-                break;
-              }
-            }
-          } catch {
-            // session already expired — nothing to revoke
           }
+        } catch {
+          // token lookup failed — nothing to revoke
         }
       }
 
@@ -283,25 +276,20 @@ export const refreshSession = createServerFn({ method: "POST" }).handler(
         return { success: false, error: "No refresh token found", data: null };
       }
 
-      // Search all non-revoked, non-expired refresh tokens and find the one
-      // matching the raw token via bcrypt comparison. This avoids depending on
-      // the short-lived session cookie, which may have already expired.
-      const candidates = await db.refreshToken.findMany({
+      // Look up by SHA-256 selector for O(1) DB lookup, then verify the
+      // bcrypt hash to confirm authenticity.
+      const tokenSelector = await hashTokenSelector(rawToken);
+      const candidate = await db.refreshToken.findFirst({
         where: {
+          tokenSelector,
           revoked: false,
           expiresAt: { gt: new Date() },
         },
         include: { user: true },
       });
 
-      let matchedRow: (typeof candidates)[number] | undefined;
-      for (const row of candidates) {
-        const matches = await bcrypt.compare(rawToken, row.token);
-        if (matches) {
-          matchedRow = row;
-          break;
-        }
-      }
+      const matchedRow =
+        candidate && (await bcrypt.compare(rawToken, candidate.token)) ? candidate : null;
 
       if (!matchedRow) {
         deleteCookie("session");

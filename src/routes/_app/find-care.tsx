@@ -1,45 +1,58 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { CheckCircle, Hospital, MapPin, Search, XCircle } from 'lucide-react'
-import DashboardLayout from '#/components/dashboard/DashboardLayout'
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { CheckCircle, Hospital, MapPin, Search, XCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import DashboardLayout from "#/components/dashboard/DashboardLayout";
 
-export const Route = createFileRoute('/find-care')({ component: FindCarePage })
+export const Route = createFileRoute("/_app/find-care")({ component: FindCarePage });
 
 interface HospitalListing {
-  id: string
-  name: string
-  hmoCovered: boolean
-  tier: string
-  openNow: boolean
-  distance: string
+  id: string;
+  name: string;
+  hmoCovered: boolean;
+  tier: string;
+  openNow: boolean;
+  distance: string;
 }
 
 const HOSPITALS: HospitalListing[] = [
   {
-    id: '1',
-    name: 'Lagos State University Teaching Hospital',
+    id: "1",
+    name: "Lagos State University Teaching Hospital",
     hmoCovered: true,
-    tier: 'Tier 1 Care - Public',
+    tier: "Tier 1 Care - Public",
     openNow: true,
-    distance: '2KM away',
+    distance: "2KM away",
   },
   {
-    id: '2',
-    name: 'Lily Hospital Lagos',
+    id: "2",
+    name: "Lily Hospital Lagos",
     hmoCovered: false,
-    tier: 'Tier 1 Care - Private',
+    tier: "Tier 1 Care - Private",
     openNow: true,
-    distance: '5KM away',
+    distance: "5KM away",
   },
   {
-    id: '3',
-    name: 'Reddington Hospital',
+    id: "3",
+    name: "Reddington Hospital",
     hmoCovered: true,
-    tier: 'Tier 2 Care - Private',
+    tier: "Tier 2 Care - Private",
     openNow: false,
-    distance: '8KM away',
+    distance: "8KM away",
   },
-]
+];
+
+const HOSPITAL_CARD_STYLE = {
+  background: "rgba(255,255,255,0.70)",
+  border: "1px solid rgba(255,255,255,0.85)",
+} as const;
+
+const MAP_CONTAINER_STYLE = { height: "220px" } as const;
+
+const MAP_IFRAME_STYLE = { border: 0, width: "100%", height: "100%" } as const;
+
+const LOCATION_CARD_STYLE = { background: "rgba(255,255,255,0.75)" } as const;
+
+const RECOMMENDED_HEADER_STYLE = { background: "rgba(255,255,255,0.60)" } as const;
 
 function FindCareSubHeader() {
   return (
@@ -47,16 +60,16 @@ function FindCareSubHeader() {
       <Hospital size={24} className="text-white" />
       <h2 className="font-display font-bold text-white text-lg tracking-wide">Find Care</h2>
     </div>
-  )
+  );
 }
 
 function HospitalCard({ hospital }: { hospital: HospitalListing }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const handleBookService = useCallback(() => {
+    void navigate({ to: "/book-appointment" });
+  }, [navigate]);
   return (
-    <div
-      className="rounded-2xl p-5 shadow-sm"
-      style={{ background: 'rgba(255,255,255,0.70)', border: '1px solid rgba(255,255,255,0.85)' }}
-    >
+    <div className="rounded-2xl p-5 shadow-sm" style={HOSPITAL_CARD_STYLE}>
       <h3 className="font-display font-bold text-navy text-base mb-3">{hospital.name}</h3>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-1.5">
@@ -66,9 +79,9 @@ function HospitalCard({ hospital }: { hospital: HospitalListing }) {
             <XCircle size={16} className="text-orange shrink-0" />
           )}
           <span
-            className={`text-sm font-semibold ${hospital.hmoCovered ? 'text-green' : 'text-orange'}`}
+            className={`text-sm font-semibold ${hospital.hmoCovered ? "text-green" : "text-orange"}`}
           >
-            {hospital.hmoCovered ? 'HMO Covered' : 'HMO Uncovered'}
+            {hospital.hmoCovered ? "HMO Covered" : "HMO Uncovered"}
           </span>
         </div>
         <span className="text-slate-500 text-sm">{hospital.tier}</span>
@@ -76,37 +89,34 @@ function HospitalCard({ hospital }: { hospital: HospitalListing }) {
       <div className="flex items-center justify-between mb-4">
         <span
           className={`text-sm font-semibold px-3 py-1 rounded-full ${
-            hospital.openNow
-              ? 'text-green bg-green/10'
-              : 'text-slate-500 bg-slate-100'
+            hospital.openNow ? "text-green bg-green/10" : "text-slate-500 bg-slate-100"
           }`}
         >
-          {hospital.openNow ? 'Open Now' : 'Closed'}
+          {hospital.openNow ? "Open Now" : "Closed"}
         </span>
         <span className="text-slate-500 text-sm">{hospital.distance}</span>
       </div>
       <button
         type="button"
-        onClick={() => void navigate({ to: '/book-appointment' })}
+        onClick={handleBookService}
         className="w-full bg-navy text-white font-display font-bold text-sm tracking-wide py-3 rounded-xl hover:bg-navy-dark transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
       >
         Book Service
       </button>
     </div>
-  )
+  );
 }
 
 function FindCarePage() {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("");
 
   const filtered = query
     ? HOSPITALS.filter((h) => h.name.toLowerCase().includes(query.toLowerCase()))
-    : HOSPITALS
+    : HOSPITALS;
 
   return (
     <DashboardLayout activeTab="find-care" mobileSubHeader={<FindCareSubHeader />}>
       <div className="px-4 sm:px-6 lg:px-8 py-5 max-w-4xl mx-auto w-full">
-
         {/* Desktop page title */}
         <div className="hidden lg:flex items-center gap-3 mb-6">
           <Hospital size={28} className="text-navy" />
@@ -132,10 +142,10 @@ function FindCarePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Map + location */}
           <div className="space-y-3">
-            <div className="rounded-2xl overflow-hidden shadow-sm" style={{ height: '220px' }}>
+            <div className="rounded-2xl overflow-hidden shadow-sm" style={MAP_CONTAINER_STYLE}>
               <iframe
                 src="https://maps.google.com/maps?q=Lagos+State+University+Teaching+Hospital,+Lagos&hl=en&z=14&output=embed"
-                style={{ border: 0, width: '100%', height: '100%' }}
+                style={MAP_IFRAME_STYLE}
                 title="Map showing LASUTH location in Lagos, Nigeria"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -144,7 +154,7 @@ function FindCarePage() {
             {/* Current location card */}
             <div
               className="flex items-start gap-3 rounded-xl px-4 py-3 shadow-sm"
-              style={{ background: 'rgba(255,255,255,0.75)' }}
+              style={LOCATION_CARD_STYLE}
             >
               <MapPin size={18} className="text-navy shrink-0 mt-0.5" />
               <p className="text-sm text-slate-700">
@@ -156,10 +166,7 @@ function FindCarePage() {
 
           {/* Right: Recommended hospitals */}
           <div>
-            <div
-              className="rounded-2xl px-5 py-4 mb-4 shadow-sm"
-              style={{ background: 'rgba(255,255,255,0.60)' }}
-            >
+            <div className="rounded-2xl px-5 py-4 mb-4 shadow-sm" style={RECOMMENDED_HEADER_STYLE}>
               <h3 className="font-display font-bold text-navy text-lg text-center">
                 Recommended for You
               </h3>
@@ -178,5 +185,5 @@ function FindCarePage() {
         </div>
       </div>
     </DashboardLayout>
-  )
+  );
 }

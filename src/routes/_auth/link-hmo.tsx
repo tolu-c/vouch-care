@@ -1,44 +1,41 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useForm } from '@tanstack/react-form'
-import { ChevronDown } from 'lucide-react'
-import AuthHeader from '#/components/auth/AuthHeader'
-import FormError from '#/components/form/FormError'
-import SubmitButton from '#/components/form/SubmitButton'
-import {
-  AUTH_SELECT_INPUT_CLASS,
-  AUTH_TEXT_INPUT_CLASS,
-} from '#/components/form/formClasses'
-import { validateHmoId, validateRequiredSelection } from '#/lib/formValidators'
+import { useForm } from "@tanstack/react-form";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ChevronDown } from "lucide-react";
+import AuthHeader from "#/components/auth/AuthHeader";
+import FormError from "#/components/form/FormError";
+import { AUTH_SELECT_INPUT_CLASS, AUTH_TEXT_INPUT_CLASS } from "#/components/form/formClasses";
+import SubmitButton from "#/components/form/SubmitButton";
+import { validateHmoId, validateRequiredSelection } from "#/lib/formValidators";
 
-export const Route = createFileRoute('/link-hmo')({ component: LinkHmoPage })
+export const Route = createFileRoute("/_auth/link-hmo")({ component: LinkHmoPage });
 
 const CLOUD_BG = {
   background:
-    'linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)',
-}
+    "linear-gradient(155deg, #a4c0d8 0%, #b8d2e8 20%, #c8dff0 40%, #d8ecf8 60%, #e8f3fc 80%, #f4f9fd 100%)",
+};
 
 const HMO_OPTIONS = [
-  'Hygeia HMO',
-  'Reliance HMO',
-  'Leadway Health',
-  'Avon HMO',
-  'AXA Mansard',
-  'Total Energies',
-  'Clearline HMO',
-]
+  "Hygeia HMO",
+  "Reliance HMO",
+  "Leadway Health",
+  "Avon HMO",
+  "AXA Mansard",
+  "Total Energies",
+  "Clearline HMO",
+];
 
 function LinkHmoPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
-      hmoId: '',
-      selectedHmo: '',
+      hmoId: "",
+      selectedHmo: "",
     },
     onSubmit: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 700))
-      void navigate({ to: '/verify' })
+      await new Promise((resolve) => setTimeout(resolve, 700));
+      void navigate({ to: "/verify" });
     },
-  })
+  });
 
   return (
     <div className="flex flex-col min-h-screen" style={CLOUD_BG}>
@@ -49,16 +46,16 @@ function LinkHmoPage() {
         <div
           className="absolute rounded-full pointer-events-none select-none"
           style={{
-            width: '420px',
-            height: '420px',
+            width: "420px",
+            height: "420px",
             background:
-              'radial-gradient(circle at 38% 32%, #f8f8fc, #dce4ef 45%, #c0ccd8 72%, #a8b8cc)',
+              "radial-gradient(circle at 38% 32%, #f8f8fc, #dce4ef 45%, #c0ccd8 72%, #a8b8cc)",
             boxShadow:
-              'inset -10px -10px 24px rgba(0,0,0,0.1), inset 8px 8px 20px rgba(255,255,255,0.5)',
+              "inset -10px -10px 24px rgba(0,0,0,0.1), inset 8px 8px 20px rgba(255,255,255,0.5)",
             opacity: 0.75,
-            top: '50%',
-            left: '32%',
-            transform: 'translate(-50%, -50%)',
+            top: "50%",
+            left: "32%",
+            transform: "translate(-50%, -50%)",
           }}
           aria-hidden="true"
         />
@@ -78,7 +75,7 @@ function LinkHmoPage() {
           {/* Right: Form card */}
           <div
             className="w-full md:w-[54%] max-w-sm rounded-2xl p-8 shadow-md"
-            style={{ backgroundColor: '#ddd9ce' }}
+            style={{ backgroundColor: "#ddd9ce" }}
           >
             <h1 className="font-display font-extrabold text-[#3535C8] text-2xl sm:text-3xl tracking-wide mb-2">
               SUCCESSFUL!
@@ -87,9 +84,9 @@ function LinkHmoPage() {
 
             <form
               onSubmit={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                void form.handleSubmit()
+                e.preventDefault();
+                e.stopPropagation();
+                void form.handleSubmit();
               }}
               className="space-y-4"
             >
@@ -121,7 +118,7 @@ function LinkHmoPage() {
               <form.Field
                 name="selectedHmo"
                 validators={{
-                  onChange: ({ value }) => validateRequiredSelection(value, 'an HMO'),
+                  onChange: ({ value }) => validateRequiredSelection(value, "an HMO"),
                 }}
               >
                 {(field) => (
@@ -154,9 +151,8 @@ function LinkHmoPage() {
                 )}
               </form.Field>
 
-              <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting]}
-                children={([canSubmit, isSubmitting]) => (
+              <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
+                {([canSubmit, isSubmitting]) => (
                   <SubmitButton
                     canSubmit={canSubmit}
                     isSubmitting={isSubmitting}
@@ -165,11 +161,11 @@ function LinkHmoPage() {
                     className="w-full bg-[#1B2880] text-white font-display font-bold text-base tracking-[0.16em] py-3.5 rounded-lg hover:bg-navy-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                   />
                 )}
-              />
+              </form.Subscribe>
             </form>
 
             <p className="text-center text-slate-500 text-sm mt-5">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link to="/login" className="text-[#3535C8] font-semibold hover:underline">
                 Login
               </Link>
@@ -178,5 +174,5 @@ function LinkHmoPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

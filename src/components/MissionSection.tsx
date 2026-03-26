@@ -1,11 +1,11 @@
-import { useScrollReveal } from '#/hooks/useScrollReveal'
+import { useScrollReveal } from "#/hooks/useScrollReveal";
 
 const MISSION_IMAGE =
-  'https://images.pexels.com/photos/7163432/pexels-photo-7163432.jpeg?auto=compress&cs=tinysrgb&w=800&h=960&fit=crop'
+  "https://images.pexels.com/photos/7163432/pexels-photo-7163432.jpeg?auto=compress&cs=tinysrgb&w=800&h=960&fit=crop";
 
 export default function MissionSection() {
-  const imageRef = useScrollReveal()
-  const textRef = useScrollReveal()
+  const imageRef = useScrollReveal();
+  const textRef = useScrollReveal();
 
   return (
     <section
@@ -17,8 +17,8 @@ export default function MissionSection() {
         className="absolute inset-0 pointer-events-none opacity-[0.045]"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 1.5px 1.5px, rgba(255,255,255,0.8) 1.5px, transparent 0)',
-          backgroundSize: '30px 30px',
+            "radial-gradient(circle at 1.5px 1.5px, rgba(255,255,255,0.8) 1.5px, transparent 0)",
+          backgroundSize: "30px 30px",
         }}
         aria-hidden="true"
       />
@@ -64,12 +64,12 @@ export default function MissionSection() {
             Our Mission
           </span>
           <h2 className="font-display font-extrabold text-white text-[2.2rem] sm:text-[2.8rem] lg:text-[3.2rem] leading-[1.08] tracking-tight mb-8">
-            We are here to make{' '}
-            <span className="text-orange">Healthcare</span> Accessible to Everyone
+            We are here to make <span className="text-orange">Healthcare</span> Accessible to
+            Everyone
           </h2>
           <p className="text-white/65 text-base sm:text-lg leading-relaxed mb-10 max-w-md mx-auto lg:mx-0">
-            Bringing AI-powered triage, guaranteed payments, and real-time visibility
-            together — so no patient is turned away and no provider loses revenue.
+            Bringing AI-powered triage, guaranteed payments, and real-time visibility together — so
+            no patient is turned away and no provider loses revenue.
           </p>
           <button
             type="button"
@@ -80,5 +80,5 @@ export default function MissionSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

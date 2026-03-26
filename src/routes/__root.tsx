@@ -1,91 +1,67 @@
-import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import type { ReactNode } from 'react'
-import VouchHeader from '../components/VouchHeader'
-import VouchFooter from '../components/VouchFooter'
-
-import appCss from '../styles.css?url'
-
-const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { getSession } from "#/server/auth";
+import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
+  beforeLoad: async () => {
+    const result = await getSession();
+    const user = result?.success ? result.data : null;
+
+    return {
+      user,
+      isAuthenticated: !!user,
+    };
+  },
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: "utf-8",
       },
       {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
       },
       {
-        title: 'VouchCare — Get the Right Care Instantly',
+        title: "VouchCare — Get the Right Care Instantly",
       },
     ],
     links: [
       {
-        rel: 'stylesheet',
+        rel: "stylesheet",
         href: appCss,
       },
       {
-        rel: 'icon',
-        href: '/favicon.svg',
-        type: 'image/svg+xml',
+        rel: "icon",
+        href: "/favicon.svg",
+        type: "image/svg+xml",
       },
       {
-        rel: 'icon',
-        href: '/favicon.ico',
+        rel: "icon",
+        href: "/favicon.ico",
       },
     ],
   }),
   notFoundComponent: () => <p>Page not found.</p>,
   shellComponent: RootDocument,
-})
+});
 
-const AUTH_PATHS = [
-  '/login',
-  '/forgot-password',
-  '/verify',
-  '/verify-success',
-  '/portal-select',
-  '/signup',
-  '/link-hmo',
-  '/home',
-  '/find-care',
-  '/book-appointment',
-  '/support',
-  '/triage',
-]
-
-function AuthShell({ children }: { children: ReactNode }) {
-  const { location } = useRouterState()
-  const isAuth = AUTH_PATHS.includes(location.pathname)
+function RootDocument() {
   return (
-    <>
-      {!isAuth && <VouchHeader />}
-      {children}
-      {!isAuth && <VouchFooter />}
-    </>
-  )
-}
-
-function RootDocument({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(27,40,128,0.18)]">
-        <AuthShell>{children}</AuthShell>
+        <Outlet />
         <TanStackDevtools
           config={{
-            position: 'bottom-right',
+            position: "bottom-right",
           }}
           plugins={[
             {
-              name: 'Tanstack Router',
+              name: "Tanstack Router",
               render: <TanStackRouterDevtoolsPanel />,
             },
           ]}
@@ -93,5 +69,5 @@ function RootDocument({ children }: { children: ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }
