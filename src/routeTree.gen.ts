@@ -8,337 +8,337 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AppRouteImport } from "./routes/_app";
-import { Route as AppBookAppointmentRouteImport } from "./routes/_app/book-appointment";
-import { Route as AppFindCareRouteImport } from "./routes/_app/find-care";
-import { Route as AppHomeRouteImport } from "./routes/_app/home";
-import { Route as AppSupportRouteImport } from "./routes/_app/support";
-import { Route as AppTriageRouteImport } from "./routes/_app/triage";
-import { Route as AuthRouteImport } from "./routes/_auth";
-import { Route as AuthForgotPasswordRouteImport } from "./routes/_auth/forgot-password";
-import { Route as AuthLinkHmoRouteImport } from "./routes/_auth/link-hmo";
-import { Route as AuthLoginRouteImport } from "./routes/_auth/login";
-import { Route as AuthPortalSelectRouteImport } from "./routes/_auth/portal-select";
-import { Route as AuthSignupRouteImport } from "./routes/_auth/signup";
-import { Route as AuthVerifyRouteImport } from "./routes/_auth/verify";
-import { Route as AuthVerifySuccessRouteImport } from "./routes/_auth/verify-success";
-import { Route as AboutRouteImport } from "./routes/about";
-import { Route as IndexRouteImport } from "./routes/index";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthVerifySuccessRouteImport } from './routes/_auth/verify-success'
+import { Route as AuthVerifyRouteImport } from './routes/_auth/verify'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthPortalSelectRouteImport } from './routes/_auth/portal-select'
+import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthLinkHmoRouteImport } from './routes/_auth/link-hmo'
+import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
+import { Route as AppTriageRouteImport } from './routes/_app/triage'
+import { Route as AppSupportRouteImport } from './routes/_app/support'
+import { Route as AppHomeRouteImport } from './routes/_app/home'
+import { Route as AppFindCareRouteImport } from './routes/_app/find-care'
+import { Route as AppBookAppointmentRouteImport } from './routes/_app/book-appointment'
 
 const AboutRoute = AboutRouteImport.update({
-  id: "/about",
-  path: "/about",
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthRoute = AuthRouteImport.update({
-  id: "/_auth",
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AppRoute = AppRouteImport.update({
-  id: "/_app",
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthVerifySuccessRoute = AuthVerifySuccessRouteImport.update({
-  id: "/verify-success",
-  path: "/verify-success",
+  id: '/verify-success',
+  path: '/verify-success',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthVerifyRoute = AuthVerifyRouteImport.update({
-  id: "/verify",
-  path: "/verify",
+  id: '/verify',
+  path: '/verify',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: "/signup",
-  path: "/signup",
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthPortalSelectRoute = AuthPortalSelectRouteImport.update({
-  id: "/portal-select",
-  path: "/portal-select",
+  id: '/portal-select',
+  path: '/portal-select',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: "/login",
-  path: "/login",
+  id: '/login',
+  path: '/login',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthLinkHmoRoute = AuthLinkHmoRouteImport.update({
-  id: "/link-hmo",
-  path: "/link-hmo",
+  id: '/link-hmo',
+  path: '/link-hmo',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: "/forgot-password",
-  path: "/forgot-password",
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => AuthRoute,
-} as any);
+} as any)
 const AppTriageRoute = AppTriageRouteImport.update({
-  id: "/triage",
-  path: "/triage",
+  id: '/triage',
+  path: '/triage',
   getParentRoute: () => AppRoute,
-} as any);
+} as any)
 const AppSupportRoute = AppSupportRouteImport.update({
-  id: "/support",
-  path: "/support",
+  id: '/support',
+  path: '/support',
   getParentRoute: () => AppRoute,
-} as any);
+} as any)
 const AppHomeRoute = AppHomeRouteImport.update({
-  id: "/home",
-  path: "/home",
+  id: '/home',
+  path: '/home',
   getParentRoute: () => AppRoute,
-} as any);
+} as any)
 const AppFindCareRoute = AppFindCareRouteImport.update({
-  id: "/find-care",
-  path: "/find-care",
+  id: '/find-care',
+  path: '/find-care',
   getParentRoute: () => AppRoute,
-} as any);
+} as any)
 const AppBookAppointmentRoute = AppBookAppointmentRouteImport.update({
-  id: "/book-appointment",
-  path: "/book-appointment",
+  id: '/book-appointment',
+  path: '/book-appointment',
   getParentRoute: () => AppRoute,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/book-appointment": typeof AppBookAppointmentRoute;
-  "/find-care": typeof AppFindCareRoute;
-  "/home": typeof AppHomeRoute;
-  "/support": typeof AppSupportRoute;
-  "/triage": typeof AppTriageRoute;
-  "/forgot-password": typeof AuthForgotPasswordRoute;
-  "/link-hmo": typeof AuthLinkHmoRoute;
-  "/login": typeof AuthLoginRoute;
-  "/portal-select": typeof AuthPortalSelectRoute;
-  "/signup": typeof AuthSignupRoute;
-  "/verify": typeof AuthVerifyRoute;
-  "/verify-success": typeof AuthVerifySuccessRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/book-appointment': typeof AppBookAppointmentRoute
+  '/find-care': typeof AppFindCareRoute
+  '/home': typeof AppHomeRoute
+  '/support': typeof AppSupportRoute
+  '/triage': typeof AppTriageRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/link-hmo': typeof AuthLinkHmoRoute
+  '/login': typeof AuthLoginRoute
+  '/portal-select': typeof AuthPortalSelectRoute
+  '/signup': typeof AuthSignupRoute
+  '/verify': typeof AuthVerifyRoute
+  '/verify-success': typeof AuthVerifySuccessRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/about": typeof AboutRoute;
-  "/book-appointment": typeof AppBookAppointmentRoute;
-  "/find-care": typeof AppFindCareRoute;
-  "/home": typeof AppHomeRoute;
-  "/support": typeof AppSupportRoute;
-  "/triage": typeof AppTriageRoute;
-  "/forgot-password": typeof AuthForgotPasswordRoute;
-  "/link-hmo": typeof AuthLinkHmoRoute;
-  "/login": typeof AuthLoginRoute;
-  "/portal-select": typeof AuthPortalSelectRoute;
-  "/signup": typeof AuthSignupRoute;
-  "/verify": typeof AuthVerifyRoute;
-  "/verify-success": typeof AuthVerifySuccessRoute;
+  '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/book-appointment': typeof AppBookAppointmentRoute
+  '/find-care': typeof AppFindCareRoute
+  '/home': typeof AppHomeRoute
+  '/support': typeof AppSupportRoute
+  '/triage': typeof AppTriageRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/link-hmo': typeof AuthLinkHmoRoute
+  '/login': typeof AuthLoginRoute
+  '/portal-select': typeof AuthPortalSelectRoute
+  '/signup': typeof AuthSignupRoute
+  '/verify': typeof AuthVerifyRoute
+  '/verify-success': typeof AuthVerifySuccessRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/_app": typeof AppRouteWithChildren;
-  "/_auth": typeof AuthRouteWithChildren;
-  "/about": typeof AboutRoute;
-  "/_app/book-appointment": typeof AppBookAppointmentRoute;
-  "/_app/find-care": typeof AppFindCareRoute;
-  "/_app/home": typeof AppHomeRoute;
-  "/_app/support": typeof AppSupportRoute;
-  "/_app/triage": typeof AppTriageRoute;
-  "/_auth/forgot-password": typeof AuthForgotPasswordRoute;
-  "/_auth/link-hmo": typeof AuthLinkHmoRoute;
-  "/_auth/login": typeof AuthLoginRoute;
-  "/_auth/portal-select": typeof AuthPortalSelectRoute;
-  "/_auth/signup": typeof AuthSignupRoute;
-  "/_auth/verify": typeof AuthVerifyRoute;
-  "/_auth/verify-success": typeof AuthVerifySuccessRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_auth': typeof AuthRouteWithChildren
+  '/about': typeof AboutRoute
+  '/_app/book-appointment': typeof AppBookAppointmentRoute
+  '/_app/find-care': typeof AppFindCareRoute
+  '/_app/home': typeof AppHomeRoute
+  '/_app/support': typeof AppSupportRoute
+  '/_app/triage': typeof AppTriageRoute
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/_auth/link-hmo': typeof AuthLinkHmoRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/portal-select': typeof AuthPortalSelectRoute
+  '/_auth/signup': typeof AuthSignupRoute
+  '/_auth/verify': typeof AuthVerifyRoute
+  '/_auth/verify-success': typeof AuthVerifySuccessRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/about"
-    | "/book-appointment"
-    | "/find-care"
-    | "/home"
-    | "/support"
-    | "/triage"
-    | "/forgot-password"
-    | "/link-hmo"
-    | "/login"
-    | "/portal-select"
-    | "/signup"
-    | "/verify"
-    | "/verify-success";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/about'
+    | '/book-appointment'
+    | '/find-care'
+    | '/home'
+    | '/support'
+    | '/triage'
+    | '/forgot-password'
+    | '/link-hmo'
+    | '/login'
+    | '/portal-select'
+    | '/signup'
+    | '/verify'
+    | '/verify-success'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/about"
-    | "/book-appointment"
-    | "/find-care"
-    | "/home"
-    | "/support"
-    | "/triage"
-    | "/forgot-password"
-    | "/link-hmo"
-    | "/login"
-    | "/portal-select"
-    | "/signup"
-    | "/verify"
-    | "/verify-success";
+    | '/'
+    | '/about'
+    | '/book-appointment'
+    | '/find-care'
+    | '/home'
+    | '/support'
+    | '/triage'
+    | '/forgot-password'
+    | '/link-hmo'
+    | '/login'
+    | '/portal-select'
+    | '/signup'
+    | '/verify'
+    | '/verify-success'
   id:
-    | "__root__"
-    | "/"
-    | "/_app"
-    | "/_auth"
-    | "/about"
-    | "/_app/book-appointment"
-    | "/_app/find-care"
-    | "/_app/home"
-    | "/_app/support"
-    | "/_app/triage"
-    | "/_auth/forgot-password"
-    | "/_auth/link-hmo"
-    | "/_auth/login"
-    | "/_auth/portal-select"
-    | "/_auth/signup"
-    | "/_auth/verify"
-    | "/_auth/verify-success";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_auth'
+    | '/about'
+    | '/_app/book-appointment'
+    | '/_app/find-care'
+    | '/_app/home'
+    | '/_app/support'
+    | '/_app/triage'
+    | '/_auth/forgot-password'
+    | '/_auth/link-hmo'
+    | '/_auth/login'
+    | '/_auth/portal-select'
+    | '/_auth/signup'
+    | '/_auth/verify'
+    | '/_auth/verify-success'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AppRoute: typeof AppRouteWithChildren;
-  AuthRoute: typeof AuthRouteWithChildren;
-  AboutRoute: typeof AboutRoute;
+  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
+  AboutRoute: typeof AboutRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_auth": {
-      id: "/_auth";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AuthRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_app": {
-      id: "/_app";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AppRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_auth/verify-success": {
-      id: "/_auth/verify-success";
-      path: "/verify-success";
-      fullPath: "/verify-success";
-      preLoaderRoute: typeof AuthVerifySuccessRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/verify": {
-      id: "/_auth/verify";
-      path: "/verify";
-      fullPath: "/verify";
-      preLoaderRoute: typeof AuthVerifyRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/signup": {
-      id: "/_auth/signup";
-      path: "/signup";
-      fullPath: "/signup";
-      preLoaderRoute: typeof AuthSignupRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/portal-select": {
-      id: "/_auth/portal-select";
-      path: "/portal-select";
-      fullPath: "/portal-select";
-      preLoaderRoute: typeof AuthPortalSelectRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/login": {
-      id: "/_auth/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof AuthLoginRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/link-hmo": {
-      id: "/_auth/link-hmo";
-      path: "/link-hmo";
-      fullPath: "/link-hmo";
-      preLoaderRoute: typeof AuthLinkHmoRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_auth/forgot-password": {
-      id: "/_auth/forgot-password";
-      path: "/forgot-password";
-      fullPath: "/forgot-password";
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport;
-      parentRoute: typeof AuthRoute;
-    };
-    "/_app/triage": {
-      id: "/_app/triage";
-      path: "/triage";
-      fullPath: "/triage";
-      preLoaderRoute: typeof AppTriageRouteImport;
-      parentRoute: typeof AppRoute;
-    };
-    "/_app/support": {
-      id: "/_app/support";
-      path: "/support";
-      fullPath: "/support";
-      preLoaderRoute: typeof AppSupportRouteImport;
-      parentRoute: typeof AppRoute;
-    };
-    "/_app/home": {
-      id: "/_app/home";
-      path: "/home";
-      fullPath: "/home";
-      preLoaderRoute: typeof AppHomeRouteImport;
-      parentRoute: typeof AppRoute;
-    };
-    "/_app/find-care": {
-      id: "/_app/find-care";
-      path: "/find-care";
-      fullPath: "/find-care";
-      preLoaderRoute: typeof AppFindCareRouteImport;
-      parentRoute: typeof AppRoute;
-    };
-    "/_app/book-appointment": {
-      id: "/_app/book-appointment";
-      path: "/book-appointment";
-      fullPath: "/book-appointment";
-      preLoaderRoute: typeof AppBookAppointmentRouteImport;
-      parentRoute: typeof AppRoute;
-    };
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/verify-success': {
+      id: '/_auth/verify-success'
+      path: '/verify-success'
+      fullPath: '/verify-success'
+      preLoaderRoute: typeof AuthVerifySuccessRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/verify': {
+      id: '/_auth/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/signup': {
+      id: '/_auth/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/portal-select': {
+      id: '/_auth/portal-select'
+      path: '/portal-select'
+      fullPath: '/portal-select'
+      preLoaderRoute: typeof AuthPortalSelectRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/link-hmo': {
+      id: '/_auth/link-hmo'
+      path: '/link-hmo'
+      fullPath: '/link-hmo'
+      preLoaderRoute: typeof AuthLinkHmoRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_app/triage': {
+      id: '/_app/triage'
+      path: '/triage'
+      fullPath: '/triage'
+      preLoaderRoute: typeof AppTriageRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/support': {
+      id: '/_app/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AppSupportRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/home': {
+      id: '/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AppHomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/find-care': {
+      id: '/_app/find-care'
+      path: '/find-care'
+      fullPath: '/find-care'
+      preLoaderRoute: typeof AppFindCareRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/book-appointment': {
+      id: '/_app/book-appointment'
+      path: '/book-appointment'
+      fullPath: '/book-appointment'
+      preLoaderRoute: typeof AppBookAppointmentRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
-  AppBookAppointmentRoute: typeof AppBookAppointmentRoute;
-  AppFindCareRoute: typeof AppFindCareRoute;
-  AppHomeRoute: typeof AppHomeRoute;
-  AppSupportRoute: typeof AppSupportRoute;
-  AppTriageRoute: typeof AppTriageRoute;
+  AppBookAppointmentRoute: typeof AppBookAppointmentRoute
+  AppFindCareRoute: typeof AppFindCareRoute
+  AppHomeRoute: typeof AppHomeRoute
+  AppSupportRoute: typeof AppSupportRoute
+  AppTriageRoute: typeof AppTriageRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -347,18 +347,18 @@ const AppRouteChildren: AppRouteChildren = {
   AppHomeRoute: AppHomeRoute,
   AppSupportRoute: AppSupportRoute,
   AppTriageRoute: AppTriageRoute,
-};
+}
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren);
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface AuthRouteChildren {
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
-  AuthLinkHmoRoute: typeof AuthLinkHmoRoute;
-  AuthLoginRoute: typeof AuthLoginRoute;
-  AuthPortalSelectRoute: typeof AuthPortalSelectRoute;
-  AuthSignupRoute: typeof AuthSignupRoute;
-  AuthVerifyRoute: typeof AuthVerifyRoute;
-  AuthVerifySuccessRoute: typeof AuthVerifySuccessRoute;
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLinkHmoRoute: typeof AuthLinkHmoRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthPortalSelectRoute: typeof AuthPortalSelectRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+  AuthVerifyRoute: typeof AuthVerifyRoute
+  AuthVerifySuccessRoute: typeof AuthVerifySuccessRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -369,26 +369,25 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthSignupRoute: AuthSignupRoute,
   AuthVerifyRoute: AuthVerifyRoute,
   AuthVerifySuccessRoute: AuthVerifySuccessRoute,
-};
+}
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   AboutRoute: AboutRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { createStart } from "@tanstack/react-start";
-import type { getRouter } from "./router.tsx";
-
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }

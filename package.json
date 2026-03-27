@@ -33,7 +33,7 @@
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
-    "@tanstack/router-plugin": "^1.132.0",
+    "@tanstack/router-plugin": "^1.167.6",
     "@upstash/redis": "^1.37.0",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
@@ -75,6 +75,9 @@
       "esbuild",
       "lightningcss",
       "prisma"
-    ]
+    ],
+    "overrides": {
+      "@tanstack/router-core": "1.168.5"
+    }
   }
 }
