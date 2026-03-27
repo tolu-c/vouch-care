@@ -1,9 +1,9 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef } from "react";
-import AuthCloudLayout from "#/components/auth/AuthCloudLayout";
-import SubmitButton from "#/components/form/SubmitButton";
-import { validateOtpDigit } from "#/lib/formValidators";
+import AuthCloudLayout from "@/components/auth/AuthCloudLayout";
+import SubmitButton from "@/components/form/SubmitButton";
+import { validateOtpDigit } from "@/lib/formValidators";
 
 const VERIFY_IMAGE =
   "https://images.pexels.com/photos/7580260/pexels-photo-7580260.jpeg?auto=compress&cs=tinysrgb&w=700";

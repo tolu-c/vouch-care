@@ -1,10 +1,10 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import AuthCloudLayout from "#/components/auth/AuthCloudLayout";
-import FormError from "#/components/form/FormError";
-import { AUTH_TEXT_INPUT_CLASS } from "#/components/form/formClasses";
-import SubmitButton from "#/components/form/SubmitButton";
-import { validateContact } from "#/lib/formValidators";
+import AuthCloudLayout from "@/components/auth/AuthCloudLayout";
+import FormError from "@/components/form/FormError";
+import { AUTH_TEXT_INPUT_CLASS } from "@/components/form/formClasses";
+import SubmitButton from "@/components/form/SubmitButton";
+import { validateContact } from "@/lib/formValidators";
 
 const FORGOT_IMAGE =
   "https://images.pexels.com/photos/5327864/pexels-photo-5327864.jpeg?auto=compress&cs=tinysrgb&w=700";

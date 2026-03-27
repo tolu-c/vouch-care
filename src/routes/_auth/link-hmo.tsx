@@ -1,11 +1,11 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
-import AuthHeader from "#/components/auth/AuthHeader";
-import FormError from "#/components/form/FormError";
-import { AUTH_SELECT_INPUT_CLASS, AUTH_TEXT_INPUT_CLASS } from "#/components/form/formClasses";
-import SubmitButton from "#/components/form/SubmitButton";
-import { validateHmoId, validateRequiredSelection } from "#/lib/formValidators";
+import AuthHeader from "@/components/auth/AuthHeader";
+import FormError from "@/components/form/FormError";
+import { AUTH_SELECT_INPUT_CLASS, AUTH_TEXT_INPUT_CLASS } from "@/components/form/formClasses";
+import SubmitButton from "@/components/form/SubmitButton";
+import { validateHmoId, validateRequiredSelection } from "@/lib/formValidators";
 
 export const Route = createFileRoute("/_auth/link-hmo")({ component: LinkHmoPage });
 

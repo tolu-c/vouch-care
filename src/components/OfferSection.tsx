@@ -1,4 +1,4 @@
-import { useScrollReveal } from "#/hooks/useScrollReveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface Offer {
   title: string;

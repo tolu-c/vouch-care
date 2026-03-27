@@ -2,11 +2,11 @@ import { useForm } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarCheck, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import DashboardLayout from "#/components/dashboard/DashboardLayout";
-import FormError from "#/components/form/FormError";
-import { PILLED_SELECT_INPUT_CLASS } from "#/components/form/formClasses";
-import SubmitButton from "#/components/form/SubmitButton";
-import { validateRequiredSelection } from "#/lib/formValidators";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import FormError from "@/components/form/FormError";
+import { PILLED_SELECT_INPUT_CLASS } from "@/components/form/formClasses";
+import SubmitButton from "@/components/form/SubmitButton";
+import { validateRequiredSelection } from "@/lib/formValidators";
 
 export const Route = createFileRoute("/_app/book-appointment")({ component: BookAppointmentPage });
 

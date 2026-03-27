@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Bot, Mic, SendHorizontal, User } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import DashboardLayout from "#/components/dashboard/DashboardLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 export const Route = createFileRoute("/_app/triage")({ component: TriagePage });
 

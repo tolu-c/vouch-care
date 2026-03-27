@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import AuthCloudLayout from "#/components/auth/AuthCloudLayout";
+import AuthCloudLayout from "@/components/auth/AuthCloudLayout";
 
 const SUCCESS_IMAGE =
   "https://pixabay.com/get/ge5c01ae8b56420128055312dcc3488de58e3d1eda8a151f711d37cb657f1398674a96bb9eb95d724ae920a1f48962419.jpg";

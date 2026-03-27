@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import VouchFooter from "#/components/VouchFooter";
-import VouchHeader from "#/components/VouchHeader";
+import VouchFooter from "@/components/VouchFooter";
+import VouchHeader from "@/components/VouchHeader";
 
 export const Route = createFileRoute("/about")({
   component: About,

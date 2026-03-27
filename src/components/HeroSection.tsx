@@ -1,4 +1,4 @@
-import { useScrollReveal } from "#/hooks/useScrollReveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const HERO_IMAGE =
   "https://images.pexels.com/photos/1770818/pexels-photo-1770818.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop";

@@ -1,4 +1,4 @@
-import { useScrollReveal } from "#/hooks/useScrollReveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const MISSION_IMAGE =
   "https://images.pexels.com/photos/7163432/pexels-photo-7163432.jpeg?auto=compress&cs=tinysrgb&w=800&h=960&fit=crop";

@@ -1,19 +1,24 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { getSession } from "#/server/auth";
+import { getSession } from "@/server/auth";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
-    const result = await getSession();
-    const user = result?.success ? result.data : null;
-
-    return {
-      user,
-      isAuthenticated: !!user,
-    };
+    try {
+      const result = await getSession();
+      const user = result?.success ? result.data : null;
+      return { user, isAuthenticated: !!user };
+    } catch {
+      return { user: null, isAuthenticated: false };
+    }
   },
+  errorComponent: ({ error }) => (
+    <p className="p-4 text-red-600">
+      {error instanceof Error ? error.message : "Something went wrong."}
+    </p>
+  ),
   head: () => ({
     meta: [
       {
@@ -53,7 +58,7 @@ function RootDocument() {
       <head>
         <HeadContent />
       </head>
-      <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(27,40,128,0.18)]">
+      <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(27,40,128,0.18)]">
         <Outlet />
         <TanStackDevtools
           config={{

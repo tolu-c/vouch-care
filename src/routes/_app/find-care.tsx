@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CheckCircle, Hospital, MapPin, Search, XCircle } from "lucide-react";
 import { useCallback, useState } from "react";
-import DashboardLayout from "#/components/dashboard/DashboardLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 export const Route = createFileRoute("/_app/find-care")({ component: FindCarePage });
 

@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bot, ChevronDown, ChevronUp, Mail, MessageSquare, Phone } from "lucide-react";
 import { useState } from "react";
-import DashboardLayout from "#/components/dashboard/DashboardLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 export const Route = createFileRoute("/_app/support")({ component: SupportPage });
 

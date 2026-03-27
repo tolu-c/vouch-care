@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
-import AuthHeader from "#/components/auth/AuthHeader";
+import AuthHeader from "@/components/auth/AuthHeader";
 
 export const Route = createFileRoute("/_auth/portal-select")({ component: PortalSelectPage });
 

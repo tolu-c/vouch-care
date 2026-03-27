@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Bell, CalendarDays, FastForward, ListFilter, Mic, UserCircle } from "lucide-react";
 import { useCallback, useState } from "react";
-import DashboardLayout from "#/components/dashboard/DashboardLayout";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
 export const Route = createFileRoute("/_app/home")({ component: HomePage });
 

@@ -3,11 +3,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import AuthHeader from "#/components/auth/AuthHeader";
-import FormError from "#/components/form/FormError";
-import { AUTH_PASSWORD_INPUT_CLASS, AUTH_TEXT_INPUT_CLASS } from "#/components/form/formClasses";
-import SubmitButton from "#/components/form/SubmitButton";
-import { validateConfirmPassword, validateContact, validatePassword } from "#/lib/formValidators";
+import AuthHeader from "@/components/auth/AuthHeader";
+import FormError from "@/components/form/FormError";
+import { AUTH_PASSWORD_INPUT_CLASS, AUTH_TEXT_INPUT_CLASS } from "@/components/form/formClasses";
+import SubmitButton from "@/components/form/SubmitButton";
+import { validateConfirmPassword, validateContact, validatePassword } from "@/lib/formValidators";
 
 export const Route = createFileRoute("/_auth/signup")({ component: SignupPage });
 
